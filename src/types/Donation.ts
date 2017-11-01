@@ -1,10 +1,10 @@
 import Participant from './Participant';
 
 interface DonationData {
-  message: string;
+  message: string | null;
   donorName: string;
   timestamp: number;
-  donationAmount: 15;
+  donationAmount: number;
 }
 
 export default class Donation {

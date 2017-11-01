@@ -12,10 +12,10 @@ export default function Donation(props: {
         <span className="Donation-amount">${props.info.amount.toFixed(2)}</span>
         {/* TODO: Dismissable button */}
       </header>
-      <div>
-        <h3>{props.info.participant.name}</h3>
-        <h2>{props.info.name}</h2>
-        {props.info.message && <p>{props.info.message}</p>}
+      <div className="Donation-body">
+        <h3 className="Donation-participant">{props.info.participant.name}</h3>
+        <h2 className="Donation-name">{props.info.name}</h2>
+        {props.info.message ? <p>{props.info.message}</p> : <p><em>No message</em></p>}
       </div>
     </div>
   );
