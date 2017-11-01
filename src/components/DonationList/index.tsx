@@ -6,7 +6,7 @@ import Donation from '../Donation';
 import './index.css';
 
 export default function DonationList(props: {
-  donations: DonationType[]
+  donations: DonationType[],
 }) {
   return (
     <div className="DonationList">

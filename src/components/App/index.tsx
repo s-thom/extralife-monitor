@@ -10,7 +10,7 @@ const logo = require('./logo.svg');
 
 class App extends React.Component {
   render() {
-    let p = new ParticipantType({
+    const p = new ParticipantType({
       displayName: 'test',
       totalRaisedAmount: 10,
       fundraisingGoal: 20,
@@ -18,24 +18,24 @@ class App extends React.Component {
       avatarImageURL: './logo.svg',
     });
 
-    let d = new DonationType(
+    const d = new DonationType(
       {
         message: null,
         donorName: 'Alice',
         timestamp: Date.now(),
         donationAmount: 10,
       },
-      p
+      p,
     );
 
-    let d2 = new DonationType(
+    const d2 = new DonationType(
       {
         message: 'here is a message',
         donorName: 'Alice',
         timestamp: Date.now(),
         donationAmount: 10,
       },
-      p
+      p,
     );
 
     return (

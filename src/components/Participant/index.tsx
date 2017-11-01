@@ -4,7 +4,7 @@ import ParticipantType from '../../types/Participant';
 import './index.css';
 
 export default function Participant(props: {
-  info: ParticipantType
+  info: ParticipantType,
 }) {
   return (
     <div className="Participant">
