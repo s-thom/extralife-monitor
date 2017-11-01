@@ -9,13 +9,15 @@ export default function Participant(props: {
   return (
     <div className="Participant">
       <header className="Participant-header">
-        <h2>{props.info.name}</h2>
-        <h3>{props.info.id}</h3>
+        <h2 className="Participant-name">{props.info.name}</h2>
+        <h3 className="Participant-id">{props.info.id}</h3>
       </header>
       <div>
-        <span className="Participant-raised">${props.info.raised.toFixed(2)}</span>
-        /
-        <span className="Participant-goal">${props.info.goal.toFixed(2)}</span>
+        <span className="Participant-goal">
+          <span className="Participant-raised">${props.info.raised.toFixed(2)}</span>
+          /
+          <span className="Participant-full-goal">${props.info.goal.toFixed(2)}</span>
+        </span>
       </div>
     </div>
   );
