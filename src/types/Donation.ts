@@ -8,7 +8,7 @@ interface DonationData {
 }
 
 export default class Donation {
-  public readonly message: string;
+  public readonly message: string | null;
   public readonly amount: number;
   public readonly timestamp: Date;
   public readonly name: string;
