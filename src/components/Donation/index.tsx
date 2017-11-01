@@ -4,7 +4,7 @@ import DonationType from '../../types/Donation';
 import './index.css';
 
 export default function Donation(props: {
-  info: DonationType
+  info: DonationType,
 }) {
   return (
     <div className="Donation">
