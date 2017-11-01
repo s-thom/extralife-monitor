@@ -12,6 +12,7 @@ export default class Donation {
   public readonly amount: number;
   public readonly timestamp: Date;
   public readonly name: string;
+  public readonly id: string;
 
   public readonly participant: Participant;
 
@@ -22,5 +23,7 @@ export default class Donation {
     this.name = data.donorName;
 
     this.participant = participant;
+
+    this.id = `${participant.id}-${this.name}-${this.timestamp.toISOString()}`;
   }
 }
