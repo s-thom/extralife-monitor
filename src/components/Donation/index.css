@@ -1,0 +1,37 @@
+.Donation {
+  max-width: 20em;
+  margin: 0.2em;
+  padding: 0.5em;
+  border-radius: 0.2em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12),
+  0 1px 2px rgba(0, 0, 0, 0.24);
+  background-color: #ffffff
+}
+
+.Donation-header {
+  display: flex;
+  width: 100%;
+  padding-bottom: 0.2em;
+  margin-bottom: 0.1em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.Donation-amount {
+  flex-grow: 1;
+  font-size: 1.5em;
+}
+
+.Donation-body {
+
+}
+
+.Donation-participant {
+  color: #444444;
+  font-size: 1em;
+  margin: 0.1em;
+}
+.Donation-name {
+  color: #222222;
+  font-size: 1.5em;
+  margin: 0.1em;
+}
