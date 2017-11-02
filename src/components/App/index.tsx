@@ -91,6 +91,30 @@ class App extends React.Component {
       });
   }
 
+  onParticipantRemoveClick(participant: ParticipantType) {
+    // Ensure participant is actually in array
+    const index = this.state.participants.indexOf(participant);
+    if (index === -1) {
+      // May want to display some sort of error?
+      return;
+    }
+
+    this.state.participants.splice(index, 1);
+    this.forceUpdate();
+  }
+
+  onDonationRemoveClick(donation: DonationType) {
+    // Ensure donation is actually in array
+    const index = this.state.donations.indexOf(donation);
+    if (index === -1) {
+      // May want to display some sort of error?
+      return;
+    }
+
+    this.state.donations.splice(index, 1);
+    this.forceUpdate();
+  }
+
   render() {
     return (
       <div className="App">
@@ -112,8 +136,14 @@ class App extends React.Component {
           <div className="App-refresh-donations">
             <button onClick={e => this.onGetDonationsClick(e)}>Refresh</button>
           </div>
-          <ParticipantList participants={this.state.participants} />
-          <DonationList donations={this.state.donations} />
+          <ParticipantList
+            participants={this.state.participants}
+            onRemove={p => this.onParticipantRemoveClick(p)}
+          />
+          <DonationList
+            donations={this.state.donations}
+            onRemove={d => this.onDonationRemoveClick(d)}
+          />
         </div>
       </div>
     );
