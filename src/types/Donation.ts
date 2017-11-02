@@ -3,7 +3,7 @@ import Participant from './Participant';
 export interface DonationData {
   message: string | null;
   donorName: string;
-  timestamp: number;
+  createdOn: string;
   donationAmount: number;
 }
 
@@ -19,8 +19,10 @@ export default class Donation {
   constructor(data: DonationData, participant: Participant) {
     this.message = data.message;
     this.amount = data.donationAmount;
-    this.timestamp = new Date(data.timestamp);
     this.name = data.donorName;
+
+
+    this.timestamp = new Date(Date.parse(data.createdOn));
 
     this.participant = participant;
 
