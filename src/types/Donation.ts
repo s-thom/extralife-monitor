@@ -1,6 +1,6 @@
 import Participant from './Participant';
 
-interface DonationData {
+export interface DonationData {
   message: string | null;
   donorName: string;
   timestamp: number;

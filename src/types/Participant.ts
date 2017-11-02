@@ -1,4 +1,4 @@
-interface ParticipantData {
+export interface ParticipantData {
   displayName: string;
   totalRaisedAmount: number;
   fundraisingGoal: number;
