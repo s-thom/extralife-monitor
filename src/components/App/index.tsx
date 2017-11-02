@@ -18,6 +18,8 @@ interface AppProps {
 interface AppState {
   participants: ParticipantType[];
   donations: DonationType[];
+  participantInputValue: string;
+  participantInputEnabled: boolean;
 }
 
 class App extends React.Component {
@@ -31,6 +33,8 @@ class App extends React.Component {
     this.state = {
       participants: [],
       donations: [],
+      participantInputValue: '',
+      participantInputEnabled: true,
     };
   }
 
@@ -50,28 +54,42 @@ class App extends React.Component {
         return;
       }
 
+      // Disable input box while requesting
+      this.setState({
+        ...this.state,
+        participantInputEnabled: false,
+      });
+
       getParticipantInfo(id)
         .then((participant) => {
           // Check to see if participant is already in the list
-          const existing = this.state.participants.find(p => p.id === participant.id);
+          const participants = this.state.participants;
+          const existing = participants.find(p => p.id === participant.id);
 
           if (existing) {
             // Update data
             existing.updateData(participant);
-            // Force a re-render
-            this.forceUpdate();
           } else {
             // Add participant to list
-            this.setState({
-              ...this.state,
-              participants: [
-                ...this.state.participants,
-                participant,
-              ],
-            });
+            participants.push(participant);
           }
+
+          // Update state
+          this.setState({
+            ...this.state,
+            participants,
+            participantInputValue: '',
+            participantInputEnabled: true,
+          });
         });
     }
+  }
+
+  onAddPersonValueChange(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({
+      ...this.state,
+      participantInputValue: event.target.value,
+    });
   }
 
   onGetDonationsClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -125,18 +143,25 @@ class App extends React.Component {
         </header>
         <div className="App-body">
 
-          <div className="controls-container">
+          <div className="App-controls-container">
             <div className="App-add-participant">
               <input
                 className="App-add-participant-input"
                 type="text"
                 ref={e => this.addPersonBox = e}
+                placeholder="ID of Participant"
+                value={this.state.participantInputValue}
+                disabled={!this.state.participantInputEnabled}
+                onChange={e => this.onAddPersonValueChange(e)}
                 onKeyPress={e => this.onAddPersonKeyPress(e)}
               />
             </div>
 
             <div className="App-refresh-donations">
-              <button onClick={e => this.onGetDonationsClick(e)}>Refresh</button>
+              <button
+                className="App-refresh-donations-button"
+                onClick={e => this.onGetDonationsClick(e)}
+              >Refresh Donations</button>
             </div>
           </div>
 
