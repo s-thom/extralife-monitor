@@ -44,4 +44,12 @@ export default class Participant {
   public get avatar() {
     return this._avatar;
   }
+
+  public updateData(data: Participant) {
+    this._name = data.name;
+    this._goal = data.goal;
+    this._raised = data.raised;
+    this._id = data.id;
+    this._avatar = data.avatar;
+  }
 }

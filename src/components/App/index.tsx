@@ -41,6 +41,7 @@ class App extends React.Component {
     }
 
     if (event.key === 'Enter') {
+      // Get the number from the box
       const idString = this.addPersonBox.value;
       let id;
       try {
@@ -52,15 +53,41 @@ class App extends React.Component {
 
       getParticipantInfo(id)
         .then((participant) => {
-          this.setState({
-            ...this.state,
-            participants: [
-              ...this.state.participants,
-              participant,
-            ],
-          });
+          // Check to see if participant is already in the list
+          const existing = this.state.participants.find(p => p.id === participant.id);
+
+          if (existing) {
+            // Update data
+            existing.updateData(participant);
+            // Force a re-render
+            this.forceUpdate();
+          } else {
+            // Add participant to list
+            this.setState({
+              ...this.state,
+              participants: [
+                ...this.state.participants,
+                participant,
+              ],
+            });
+          }
         });
     }
+  }
+
+  onGetDonationsClick(event: React.MouseEvent<HTMLButtonElement>) {
+    const promises = this.state.participants.map(getRecentDonations);
+    Promise.all(promises)
+      .then((donationArrays) => {
+        const a: DonationType[] = [];
+        return a.concat(...donationArrays);
+      })
+      .then((donations) => {
+        this.setState({
+          ...this.state,
+          donations,
+        });
+      });
   }
 
   render() {
