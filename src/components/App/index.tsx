@@ -18,6 +18,7 @@ interface AppProps {
 interface AppState {
   participants: ParticipantType[];
   donations: DonationType[];
+  removedDonations: DonationType[];
   participantInputValue: string;
   participantInputEnabled: boolean;
   refreshButtonEnabled: boolean;
@@ -34,6 +35,7 @@ class App extends React.Component {
     this.state = {
       participants: [],
       donations: [],
+      removedDonations: [],
       participantInputValue: '',
       participantInputEnabled: true,
       refreshButtonEnabled: true,
@@ -218,6 +220,7 @@ class App extends React.Component {
     }
 
     this.state.donations.splice(index, 1);
+    this.state.removedDonations.push(donation);
     this.forceUpdate();
   }
 
@@ -262,6 +265,11 @@ class App extends React.Component {
           <DonationList
             donations={this.state.donations}
             onRemove={d => this.onDonationRemoveClick(d)}
+          />
+
+          <h2>Removed Donations</h2>
+          <DonationList
+            donations={this.state.removedDonations}
           />
         </div>
       </div>
