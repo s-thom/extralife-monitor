@@ -79,16 +79,44 @@ class App extends React.Component {
   onGetDonationsClick(event: React.MouseEvent<HTMLButtonElement>) {
     const promises = this.state.participants.map(getRecentDonations);
     Promise.all(promises)
-      .then((donationArrays) => {
+      .then((dArr) => {
         const a: DonationType[] = [];
-        return a.concat(...donationArrays);
+        return a.concat(...dArr);
       })
       .then((donations) => {
+        donations.sort((a, b) => {
+          return a.timestamp.valueOf() - b.timestamp.valueOf();
+        });
+
         this.setState({
           ...this.state,
           donations,
         });
       });
+  }
+
+  onParticipantRemoveClick(participant: ParticipantType) {
+    // Ensure participant is actually in array
+    const index = this.state.participants.indexOf(participant);
+    if (index === -1) {
+      // May want to display some sort of error?
+      return;
+    }
+
+    this.state.participants.splice(index, 1);
+    this.forceUpdate();
+  }
+
+  onDonationRemoveClick(donation: DonationType) {
+    // Ensure donation is actually in array
+    const index = this.state.donations.indexOf(donation);
+    if (index === -1) {
+      // May want to display some sort of error?
+      return;
+    }
+
+    this.state.donations.splice(index, 1);
+    this.forceUpdate();
   }
 
   render() {
@@ -112,8 +140,14 @@ class App extends React.Component {
           <div className="App-refresh-donations">
             <button onClick={e => this.onGetDonationsClick(e)}>Refresh</button>
           </div>
-          <ParticipantList participants={this.state.participants} />
-          <DonationList donations={this.state.donations} />
+          <ParticipantList
+            participants={this.state.participants}
+            onRemove={p => this.onParticipantRemoveClick(p)}
+          />
+          <DonationList
+            donations={this.state.donations}
+            onRemove={d => this.onDonationRemoveClick(d)}
+          />
         </div>
       </div>
     );
