@@ -60,7 +60,8 @@ export default class Raffle {
       throw new Error('No donations in raffle');
     }
 
-    let curr = this.donationTotal;
+    // Select a random starting point
+    let curr = this.donationTotal * Math.random();
     for (let i = 0; i < this.donations.length; i += 1) {
       const donation = this.donations[i];
 
