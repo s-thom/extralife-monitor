@@ -71,6 +71,13 @@ class App extends React.Component {
       });
   }
 
+  saveRemovedDonations() {
+    localStorage.setItem(
+      'removedDonations',
+      JSON.stringify(this.state.removedDonations.map(d => d.id)),
+    );
+  }
+
   refreshInformation() {
     // Disable refresh button
     this.setState({
@@ -148,7 +155,10 @@ class App extends React.Component {
         this.setState({
           ...this.state,
           donations,
+          removedDonations,
         });
+
+        this.saveRemovedDonations();
 
         return donations;
       });
@@ -235,8 +245,16 @@ class App extends React.Component {
       return;
     }
 
+    // Remove from list, add to removed list, saave removed list
     this.state.donations.splice(index, 1);
     this.state.removedDonations.push(donation);
+    this.saveRemovedDonations();
+
+    // Sort by time
+    this.state.removedDonations.sort((a, b) => {
+      return a.timestamp.valueOf() - b.timestamp.valueOf();
+    });
+
     this.forceUpdate();
   }
 
