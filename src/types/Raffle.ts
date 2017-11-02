@@ -3,6 +3,7 @@ import Donation from './Donation';
 export default class Raffle {
   public readonly name: string;
   public readonly endTime: Date;
+  public readonly startTime: Date;
 
   private readonly pattern: RegExp;
   private readonly onFinish: () => void;
@@ -12,8 +13,10 @@ export default class Raffle {
   constructor(name: string, endTime: Date, pattern: string, onFinish: () => void) {
     this.name = name;
     this.endTime = endTime;
+    this.startTime = new Date();
     this.pattern = new RegExp(pattern, 'i');
     this.onFinish = onFinish;
+
     this.timeout = setTimeout(
       () => {
         this.onFinish();
@@ -31,6 +34,10 @@ export default class Raffle {
   }
 
   add(donation: Donation) {
+    if (donation.timestamp.valueOf() < this.startTime.valueOf()) {
+      console.warn('Tried adding donation before start');
+      return;
+    }
     if (donation.timestamp.valueOf() > this.endTime.valueOf()) {
       console.warn('Tried adding donation after end');
       return;
@@ -49,6 +56,10 @@ export default class Raffle {
   }
 
   selectWinner() {
+    if (this.donationCount === 0) {
+      throw new Error('No donations in raffle');
+    }
+
     let curr = this.donationTotal;
     for (let i = 0; i < this.donations.length; i += 1) {
       const donation = this.donations[i];
