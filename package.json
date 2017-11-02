@@ -4,6 +4,7 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
+    "r2": "^2.0.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-scripts-ts": "2.8.0"

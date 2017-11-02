@@ -7,10 +7,18 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Chrome against localhost",
+      "name": "Launch Chrome",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceRoot}",
-      "sourceMaps": true
+      "webRoot": "${workspaceRoot}/src",
+      "userDataDir": "${workspaceRoot}/.vscode/chrome",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///./src/*": "${webRoot}/*"
+      },
+      "runtimeArgs": [
+        "--disable-session-crashed-bubble",
+        "--disable-infobars"
+      ]
     }
   ]
 }
