@@ -20,6 +20,7 @@ interface AppState {
   donations: DonationType[];
   participantInputValue: string;
   participantInputEnabled: boolean;
+  refreshButtonEnabled: boolean;
 }
 
 class App extends React.Component {
@@ -35,7 +36,104 @@ class App extends React.Component {
       donations: [],
       participantInputValue: '',
       participantInputEnabled: true,
+      refreshButtonEnabled: true,
     };
+
+    this.loadParticipants();
+  }
+
+  saveParticipants() {
+    const str = this.state.participants.map(p => p.id).join(',');
+    localStorage.setItem('participants', str);
+  }
+
+  loadParticipants() {
+    const str = localStorage.getItem('participants');
+    if (!str) {
+      return;
+    }
+
+    const idArr = str
+      .split(',')
+      .map(s => Number.parseInt(s, 10))
+      .filter(n => n); // Remove undefineds
+
+    return Promise.resolve(idArr)
+      // Get participant info
+      .then((ids) => {
+        return this.getParticipants(ids);
+      })
+      // Get donation info
+      .then((participants) => {
+        return this.getDonations(participants);
+      });
+  }
+
+  refreshInformation() {
+    // Disable refresh button
+    this.setState({
+      ...this.state,
+      refreshButtonEnabled: false,
+    });
+
+    const idArr = this.state.participants
+      .map(p => p.id);
+
+    return Promise.resolve(idArr)
+      // Get participant info
+      .then((ids) => {
+        return this.getParticipants(ids);
+      })
+      // Get donation info
+      .then((participants) => {
+        return this.getDonations(participants);
+      })
+      .then(() => {
+        // Re-enable the refresh button
+        this.setState({
+          ...this.state,
+          refreshButtonEnabled: true,
+        });
+      });
+  }
+
+  getParticipants(ids: number[]) {
+    // Get all participants' info
+    return Promise.all(ids.map(p => getParticipantInfo(p)))
+      .then((participants) => {
+        // Save in state
+        this.setState({
+          ...this.state,
+          participants,
+        });
+        return participants;
+      });
+  }
+
+  getDonations(participants: ParticipantType[]) {
+    // Get donations for all participants
+    const dProm = Promise.all(participants.map(p => getRecentDonations(p)))
+      .then((dArr) => {
+        const a: DonationType[] = [];
+        return a.concat(...dArr);
+      });
+
+    // Add donations to state
+    return dProm
+      .then((donations) => {
+        // TODO: Filter out donations that have already been dismissed
+
+        // Sort by time
+        donations.sort((a, b) => {
+          return a.timestamp.valueOf() - b.timestamp.valueOf();
+        });
+
+        // Save in state
+        this.setState({
+          ...this.state,
+          donations,
+        });
+      });
   }
 
   onAddPersonKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -81,6 +179,8 @@ class App extends React.Component {
             participantInputValue: '',
             participantInputEnabled: true,
           });
+
+          this.saveParticipants();
         });
     }
   }
@@ -93,22 +193,7 @@ class App extends React.Component {
   }
 
   onGetDonationsClick(event: React.MouseEvent<HTMLButtonElement>) {
-    const promises = this.state.participants.map(getRecentDonations);
-    Promise.all(promises)
-      .then((dArr) => {
-        const a: DonationType[] = [];
-        return a.concat(...dArr);
-      })
-      .then((donations) => {
-        donations.sort((a, b) => {
-          return a.timestamp.valueOf() - b.timestamp.valueOf();
-        });
-
-        this.setState({
-          ...this.state,
-          donations,
-        });
-      });
+    this.refreshInformation();
   }
 
   onParticipantRemoveClick(participant: ParticipantType) {
@@ -120,6 +205,7 @@ class App extends React.Component {
     }
 
     this.state.participants.splice(index, 1);
+    this.saveParticipants();
     this.forceUpdate();
   }
 
@@ -160,8 +246,9 @@ class App extends React.Component {
             <div className="App-refresh-donations">
               <button
                 className="App-refresh-donations-button"
+                disabled={!this.state.refreshButtonEnabled}
                 onClick={e => this.onGetDonationsClick(e)}
-              >Refresh Donations</button>
+              >Refresh Info</button>
             </div>
           </div>
 
