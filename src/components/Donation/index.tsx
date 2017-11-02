@@ -15,7 +15,9 @@ export default function Donation({
   return (
     <div className="Donation">
       <header className="Donation-header">
-        <span className="Donation-amount">${info.amount.toFixed(2)}</span>
+        <span className="Donation-amount">
+          {info.amount ? `$${info.amount.toFixed(2)}` : <em>Unknown amount</em>}
+        </span>
         {
           onRemove && (
             <button
