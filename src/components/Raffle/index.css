@@ -1,0 +1,64 @@
+.Raffle {
+  display: inline-block;
+  margin: 0.2em;
+  padding: 0.5em;
+  border-radius: 0.2em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  background-color: #ffffff
+}
+
+.Raffle-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 0.2em;
+  margin-bottom: 0.1em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.Raffle-body {
+  max-width: 20em;
+}
+
+.Raffle-info {
+  flex-grow: 1;
+}
+
+.Raffle-count {
+  color: #666666;
+  font-size: 1em;
+  margin: 0.1em;
+}
+
+.Raffle-amount {
+  color: #222222;
+  font-size: 1.5em;
+  margin: 0.1em;
+}
+
+.Raffle-name {
+  margin-left: 0.5em;
+}
+
+.Raffle-remove {
+  margin-left: 0.5em;
+  padding: 0.5em;
+  border: none;
+  background-color: #eeeeee;
+  box-shadow: 0 rgba(0, 0, 0, 0), 0 rgba(0, 0, 0, 0);
+  cursor: pointer;
+  outline: 0;
+  -webkit-transition: background-color 0.2s ease-in, box-shadow 0.2s ease-in;
+  -moz-transition: background-color 0.2s ease-in, box-shadow 0.2s ease-in;
+  transition: background-color 0.2s ease-in, box-shadow 0.2s ease-in;
+}
+.Raffle-remove:hover {
+  background-color: #cccccc;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+.Raffle-remove:active {
+  background-color: #bbbbbb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
