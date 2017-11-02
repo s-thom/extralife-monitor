@@ -51,19 +51,72 @@ class App extends React.Component {
       return;
     }
 
-    const promises = str
+    const idArr = str
       .split(',')
       .map(s => Number.parseInt(s, 10))
-      .filter(n => n) // Remove undefineds
-      .map((id) => {
-        return getParticipantInfo(id);
-      });
+      .filter(n => n); // Remove undefineds
 
-    Promise.all(promises)
+    return Promise.resolve(idArr)
+      // Get participant info
+      .then((ids) => {
+        return this.getParticipants(ids);
+      })
+      // Get donation info
       .then((participants) => {
+        return this.getDonations(participants);
+      });
+  }
+
+  refreshInformation() {
+    const idArr = this.state.participants
+      .map(p => p.id);
+
+    return Promise.resolve(idArr)
+      // Get participant info
+      .then((ids) => {
+        return this.getParticipants(ids);
+      })
+      // Get donation info
+      .then((participants) => {
+        return this.getDonations(participants);
+      });
+  }
+
+  getParticipants(ids: number[]) {
+    // Get all participants' info
+    return Promise.all(ids.map(p => getParticipantInfo(p)))
+      .then((participants) => {
+        // Save in state
         this.setState({
           ...this.state,
           participants,
+        });
+        return participants;
+      });
+  }
+
+  getDonations(participants: ParticipantType[]) {
+    // Get donations for all participants
+    const dProm = Promise.all(participants.map(p => getRecentDonations(p)))
+      .then((dArr) => {
+        const a: DonationType[] = [];
+        return a.concat(...dArr);
+      });
+
+    // Add donations to state
+    return dProm
+      .then((donations) => {
+        // TODO: Filter out donations that have already been dismissed
+
+        // Sort by time
+        donations.sort((a, b) => {
+          return a.timestamp.valueOf() - b.timestamp.valueOf();
+        });
+
+        // Save in state
+        this.setState({
+          ...this.state,
+          donations,
         });
       });
   }
