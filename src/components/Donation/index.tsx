@@ -16,7 +16,7 @@ export default function Donation({
     <div className="Donation">
       <header className="Donation-header">
         <span className="Donation-amount">
-          {info.amount ? `$${info.amount.toFixed(2)}` : <em>Unknown amount</em>}
+          {info.amount ? `$${info.amount.toFixed(2)}` : <em>$??</em>}
         </span>
 
         <div className="Donation-info">
