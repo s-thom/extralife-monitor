@@ -3,8 +3,10 @@ import './index.css';
 
 import ParticipantType from '../../types/Participant';
 import DonationType from '../../types/Donation';
+import RaffleType from '../../types/Raffle';
 import ParticipantList from '../ParticipantList';
 import DonationList from '../DonationList';
+import RaffleList from '../RaffleList';
 
 import {
   getParticipantInfo,
@@ -22,6 +24,7 @@ interface AppState {
   participantInputValue: string;
   participantInputEnabled: boolean;
   refreshButtonEnabled: boolean;
+  raffles: RaffleType[];
 }
 
 class App extends React.Component {
@@ -36,6 +39,7 @@ class App extends React.Component {
       participants: [],
       donations: [],
       removedDonations: [],
+      raffles: [],
       participantInputValue: '',
       participantInputEnabled: true,
       refreshButtonEnabled: true,
@@ -151,6 +155,15 @@ class App extends React.Component {
           }
         });
 
+        // Add donations to any active raffles
+        if (this.state.raffles.length) {
+          donations.forEach((donation) => {
+            this.state.raffles.forEach((raffle) => {
+              raffle.add(donation);
+            });
+          });
+        }
+
         // Save in state
         this.setState({
           ...this.state,
@@ -258,6 +271,21 @@ class App extends React.Component {
     this.forceUpdate();
   }
 
+  onRaffleRemoveClick(raffle: RaffleType) {
+    // Ensure donation is actually in array
+    const index = this.state.raffles.indexOf(raffle);
+    if (index === -1) {
+      // May want to display some sort of error?
+      return;
+    }
+
+    raffle.cancel();
+
+    // Remove from list
+    this.state.raffles.splice(index, 1);
+    this.forceUpdate();
+  }
+
   render() {
     return (
       <div className="App">
@@ -304,6 +332,12 @@ class App extends React.Component {
           <h2>Removed Donations</h2>
           <DonationList
             donations={this.state.removedDonations}
+          />
+
+          <h2>Raffles</h2>
+          <RaffleList
+            raffles={this.state.raffles}
+            onRemove={r => this.onRaffleRemoveClick(r)}
           />
         </div>
       </div>
