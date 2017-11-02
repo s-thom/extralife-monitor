@@ -11,8 +11,6 @@ import {
   getRecentDonations,
 } from '../../util';
 
-const logo = require('./logo.svg');
-
 interface AppProps {
 
 }
@@ -20,6 +18,9 @@ interface AppProps {
 interface AppState {
   participants: ParticipantType[];
   donations: DonationType[];
+  participantInputValue: string;
+  participantInputEnabled: boolean;
+  refreshButtonEnabled: boolean;
 }
 
 class App extends React.Component {
@@ -33,7 +34,106 @@ class App extends React.Component {
     this.state = {
       participants: [],
       donations: [],
+      participantInputValue: '',
+      participantInputEnabled: true,
+      refreshButtonEnabled: true,
     };
+
+    this.loadParticipants();
+  }
+
+  saveParticipants() {
+    const str = this.state.participants.map(p => p.id).join(',');
+    localStorage.setItem('participants', str);
+  }
+
+  loadParticipants() {
+    const str = localStorage.getItem('participants');
+    if (!str) {
+      return;
+    }
+
+    const idArr = str
+      .split(',')
+      .map(s => Number.parseInt(s, 10))
+      .filter(n => n); // Remove undefineds
+
+    return Promise.resolve(idArr)
+      // Get participant info
+      .then((ids) => {
+        return this.getParticipants(ids);
+      })
+      // Get donation info
+      .then((participants) => {
+        return this.getDonations(participants);
+      });
+  }
+
+  refreshInformation() {
+    // Disable refresh button
+    this.setState({
+      ...this.state,
+      refreshButtonEnabled: false,
+    });
+
+    const idArr = this.state.participants
+      .map(p => p.id);
+
+    return Promise.resolve(idArr)
+      // Get participant info
+      .then((ids) => {
+        return this.getParticipants(ids);
+      })
+      // Get donation info
+      .then((participants) => {
+        return this.getDonations(participants);
+      })
+      .then(() => {
+        // Re-enable the refresh button
+        this.setState({
+          ...this.state,
+          refreshButtonEnabled: true,
+        });
+      });
+  }
+
+  getParticipants(ids: number[]) {
+    // Get all participants' info
+    return Promise.all(ids.map(p => getParticipantInfo(p)))
+      .then((participants) => {
+        // Save in state
+        this.setState({
+          ...this.state,
+          participants,
+        });
+        return participants;
+      });
+  }
+
+  getDonations(participants: ParticipantType[]) {
+    // Get donations for all participants
+    const dProm = Promise.all(participants.map(p => getRecentDonations(p)))
+      .then((dArr) => {
+        const a: DonationType[] = [];
+        return a.concat(...dArr);
+      });
+
+    // Add donations to state
+    return dProm
+      .then((donations) => {
+        // TODO: Filter out donations that have already been dismissed
+
+        // Sort by time
+        donations.sort((a, b) => {
+          return a.timestamp.valueOf() - b.timestamp.valueOf();
+        });
+
+        // Save in state
+        this.setState({
+          ...this.state,
+          donations,
+        });
+      });
   }
 
   onAddPersonKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -52,47 +152,48 @@ class App extends React.Component {
         return;
       }
 
+      // Disable input box while requesting
+      this.setState({
+        ...this.state,
+        participantInputEnabled: false,
+      });
+
       getParticipantInfo(id)
         .then((participant) => {
           // Check to see if participant is already in the list
-          const existing = this.state.participants.find(p => p.id === participant.id);
+          const participants = this.state.participants;
+          const existing = participants.find(p => p.id === participant.id);
 
           if (existing) {
             // Update data
             existing.updateData(participant);
-            // Force a re-render
-            this.forceUpdate();
           } else {
             // Add participant to list
-            this.setState({
-              ...this.state,
-              participants: [
-                ...this.state.participants,
-                participant,
-              ],
-            });
+            participants.push(participant);
           }
+
+          // Update state
+          this.setState({
+            ...this.state,
+            participants,
+            participantInputValue: '',
+            participantInputEnabled: true,
+          });
+
+          this.saveParticipants();
         });
     }
   }
 
-  onGetDonationsClick(event: React.MouseEvent<HTMLButtonElement>) {
-    const promises = this.state.participants.map(getRecentDonations);
-    Promise.all(promises)
-      .then((dArr) => {
-        const a: DonationType[] = [];
-        return a.concat(...dArr);
-      })
-      .then((donations) => {
-        donations.sort((a, b) => {
-          return a.timestamp.valueOf() - b.timestamp.valueOf();
-        });
+  onAddPersonValueChange(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({
+      ...this.state,
+      participantInputValue: event.target.value,
+    });
+  }
 
-        this.setState({
-          ...this.state,
-          donations,
-        });
-      });
+  onGetDonationsClick(event: React.MouseEvent<HTMLButtonElement>) {
+    this.refreshInformation();
   }
 
   onParticipantRemoveClick(participant: ParticipantType) {
@@ -104,6 +205,7 @@ class App extends React.Component {
     }
 
     this.state.participants.splice(index, 1);
+    this.saveParticipants();
     this.forceUpdate();
   }
 
@@ -123,27 +225,40 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <h1 className="App-title">Extra Life Donation Viewer</h1>
         </header>
         <div className="App-body">
-          <p className="App-intro">
-            To get started, edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <div className="App-add-participant">
-            <input
-              type="text"
-              ref={e => this.addPersonBox = e}
-              onKeyPress={e => this.onAddPersonKeyPress(e)}
-            />
+
+          <div className="App-controls-container">
+            <div className="App-add-participant">
+              <input
+                className="App-add-participant-input"
+                type="text"
+                ref={e => this.addPersonBox = e}
+                placeholder="ID of Participant"
+                value={this.state.participantInputValue}
+                disabled={!this.state.participantInputEnabled}
+                onChange={e => this.onAddPersonValueChange(e)}
+                onKeyPress={e => this.onAddPersonKeyPress(e)}
+              />
+            </div>
+
+            <div className="App-refresh-donations">
+              <button
+                className="App-refresh-donations-button"
+                disabled={!this.state.refreshButtonEnabled}
+                onClick={e => this.onGetDonationsClick(e)}
+              >Refresh Info</button>
+            </div>
           </div>
-          <div className="App-refresh-donations">
-            <button onClick={e => this.onGetDonationsClick(e)}>Refresh</button>
-          </div>
+
+          <h2>Participants</h2>
           <ParticipantList
             participants={this.state.participants}
             onRemove={p => this.onParticipantRemoveClick(p)}
           />
+
+          <h2>Donations</h2>
           <DonationList
             donations={this.state.donations}
             onRemove={d => this.onDonationRemoveClick(d)}

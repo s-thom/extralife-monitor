@@ -15,8 +15,15 @@ export default function Participant({
   return (
     <div className="Participant">
       <header className="Participant-header">
-        <h2 className="Participant-name">{info.name}</h2>
-        <h3 className="Participant-id">{info.id}</h3>
+        <div className="Participant-picture">
+          <img src={info.avatar} alt={info.name} className="Participant-picture-img"/>
+        </div>
+
+        <div className="Participant-info">
+          <h2 className="Participant-name">{info.name}</h2>
+          <h3 className="Participant-id">{info.id}</h3>
+        </div>
+
         {
           onRemove && (
             <button
