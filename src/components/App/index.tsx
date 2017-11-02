@@ -122,12 +122,26 @@ class App extends React.Component {
 
     // Add donations to state
     return dProm
-      .then((donations) => {
-        // TODO: Filter out donations that have already been dismissed
-
+      .then((donationArr) => {
         // Sort by time
-        donations.sort((a, b) => {
+        donationArr.sort((a, b) => {
           return a.timestamp.valueOf() - b.timestamp.valueOf();
+        });
+
+        // Filter out donations that have already been dismissed
+        // Get IDs of removed donations
+        const str = localStorage.getItem('removedDonations') || '[]';
+        const removedIds: string[] = JSON.parse(str);
+
+        // Split donations into active and removed arrays
+        const donations: DonationType[] = [];
+        const removedDonations: DonationType[] = [];
+        donationArr.forEach((donation) => {
+          if (removedIds.indexOf(donation.id) > -1) {
+            removedDonations.push(donation);
+          } else {
+            donations.push(donation);
+          }
         });
 
         // Save in state
@@ -135,6 +149,8 @@ class App extends React.Component {
           ...this.state,
           donations,
         });
+
+        return donations;
       });
   }
 
