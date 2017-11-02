@@ -5,12 +5,18 @@ import ParticipantType from '../../types/Participant';
 import Participant from '../Participant';
 import './index.css';
 
-export default function ParticipantList(props: {
-  participants: ParticipantType[],
-}) {
+interface Props {
+  participants: ParticipantType[];
+  onRemove?: (participant: ParticipantType) => void;
+}
+
+export default function ParticipantList({
+  participants,
+  onRemove,
+}: Props) {
   return (
     <div className="ParticipantList">
-      {props.participants.map(p => <Participant key={p.id} info={p} />)}
+      {participants.map(p => <Participant key={p.id} info={p} onRemove={onRemove} />)}
     </div>
   );
 }
