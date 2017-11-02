@@ -20,7 +20,6 @@
 }
 
 .Donation-amount {
-  flex-grow: 1;
   font-size: 1.5em;
 }
 
@@ -29,6 +28,7 @@
 }
 
 .Donation-info {
+  flex-grow: 1;
   margin-left: 0.5em;
 }
 

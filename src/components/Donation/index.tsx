@@ -20,7 +20,7 @@ export default function Donation({
         </span>
 
         <div className="Donation-info">
-          <h2 className="Donation-name">{info.name}</h2>
+          <h2 className="Donation-name">{info.name ? info.name : <em>Unknown</em>}</h2>
           <h3 className="Donation-participant">{info.participant.name}</h3>
         </div>
 
