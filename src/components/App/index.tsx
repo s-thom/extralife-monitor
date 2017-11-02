@@ -79,11 +79,15 @@ class App extends React.Component {
   onGetDonationsClick(event: React.MouseEvent<HTMLButtonElement>) {
     const promises = this.state.participants.map(getRecentDonations);
     Promise.all(promises)
-      .then((donationArrays) => {
+      .then((dArr) => {
         const a: DonationType[] = [];
-        return a.concat(...donationArrays);
+        return a.concat(...dArr);
       })
       .then((donations) => {
+        donations.sort((a, b) => {
+          return a.timestamp.valueOf() - b.timestamp.valueOf();
+        });
+
         this.setState({
           ...this.state,
           donations,
