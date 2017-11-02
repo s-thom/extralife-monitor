@@ -18,6 +18,12 @@ export default function Donation({
         <span className="Donation-amount">
           {info.amount ? `$${info.amount.toFixed(2)}` : <em>Unknown amount</em>}
         </span>
+
+        <div className="Donation-info">
+          <h2 className="Donation-name">{info.name}</h2>
+          <h3 className="Donation-participant">{info.participant.name}</h3>
+        </div>
+
         {
           onRemove && (
             <button
@@ -28,8 +34,6 @@ export default function Donation({
         }
       </header>
       <div className="Donation-body">
-        <h3 className="Donation-participant">{info.participant.name}</h3>
-        <h2 className="Donation-name">{info.name}</h2>
         {info.message ? <p>{info.message}</p> : <p><em>No message</em></p>}
       </div>
     </div>
