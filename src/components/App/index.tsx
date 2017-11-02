@@ -38,6 +38,11 @@ class App extends React.Component {
     };
   }
 
+  saveParticipants() {
+    const str = this.state.participants.map(p => p.id).join(',');
+    localStorage.setItem('participants', str);
+  }
+
   onAddPersonKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
     if (!this.addPersonBox) {
       return;
@@ -81,6 +86,8 @@ class App extends React.Component {
             participantInputValue: '',
             participantInputEnabled: true,
           });
+
+          this.saveParticipants();
         });
     }
   }
@@ -120,6 +127,7 @@ class App extends React.Component {
     }
 
     this.state.participants.splice(index, 1);
+    this.saveParticipants();
     this.forceUpdate();
   }
 
