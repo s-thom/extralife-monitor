@@ -8,6 +8,7 @@ import DonationList from '../DonationList';
 
 import {
   getParticipantInfo,
+  getRecentDonations,
 } from '../../util';
 
 const logo = require('./logo.svg');
@@ -107,6 +108,9 @@ class App extends React.Component {
               ref={e => this.addPersonBox = e}
               onKeyPress={e => this.onAddPersonKeyPress(e)}
             />
+          </div>
+          <div className="App-refresh-donations">
+            <button onClick={e => this.onGetDonationsClick(e)}>Refresh</button>
           </div>
           <ParticipantList participants={this.state.participants} />
           <DonationList donations={this.state.donations} />
