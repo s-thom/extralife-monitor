@@ -36,11 +36,36 @@ class App extends React.Component {
       participantInputValue: '',
       participantInputEnabled: true,
     };
+
+    this.loadParticipants();
   }
 
   saveParticipants() {
     const str = this.state.participants.map(p => p.id).join(',');
     localStorage.setItem('participants', str);
+  }
+
+  loadParticipants() {
+    const str = localStorage.getItem('participants');
+    if (!str) {
+      return;
+    }
+
+    const promises = str
+      .split(',')
+      .map(s => Number.parseInt(s, 10))
+      .filter(n => n) // Remove undefineds
+      .map((id) => {
+        return getParticipantInfo(id);
+      });
+
+    Promise.all(promises)
+      .then((participants) => {
+        this.setState({
+          ...this.state,
+          participants,
+        });
+      });
   }
 
   onAddPersonKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
