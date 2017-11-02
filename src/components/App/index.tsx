@@ -18,6 +18,7 @@ interface AppProps {
 interface AppState {
   participants: ParticipantType[];
   donations: DonationType[];
+  removedDonations: DonationType[];
   participantInputValue: string;
   participantInputEnabled: boolean;
   refreshButtonEnabled: boolean;
@@ -34,6 +35,7 @@ class App extends React.Component {
     this.state = {
       participants: [],
       donations: [],
+      removedDonations: [],
       participantInputValue: '',
       participantInputEnabled: true,
       refreshButtonEnabled: true,
@@ -67,6 +69,13 @@ class App extends React.Component {
       .then((participants) => {
         return this.getDonations(participants);
       });
+  }
+
+  saveRemovedDonations() {
+    localStorage.setItem(
+      'removedDonations',
+      JSON.stringify(this.state.removedDonations.map(d => d.id)),
+    );
   }
 
   refreshInformation() {
@@ -120,19 +129,38 @@ class App extends React.Component {
 
     // Add donations to state
     return dProm
-      .then((donations) => {
-        // TODO: Filter out donations that have already been dismissed
-
+      .then((donationArr) => {
         // Sort by time
-        donations.sort((a, b) => {
+        donationArr.sort((a, b) => {
           return a.timestamp.valueOf() - b.timestamp.valueOf();
+        });
+
+        // Filter out donations that have already been dismissed
+        // Get IDs of removed donations
+        const str = localStorage.getItem('removedDonations') || '[]';
+        const removedIds: string[] = JSON.parse(str);
+
+        // Split donations into active and removed arrays
+        const donations: DonationType[] = [];
+        const removedDonations: DonationType[] = [];
+        donationArr.forEach((donation) => {
+          if (removedIds.indexOf(donation.id) > -1) {
+            removedDonations.push(donation);
+          } else {
+            donations.push(donation);
+          }
         });
 
         // Save in state
         this.setState({
           ...this.state,
           donations,
+          removedDonations,
         });
+
+        this.saveRemovedDonations();
+
+        return donations;
       });
   }
 
@@ -217,7 +245,16 @@ class App extends React.Component {
       return;
     }
 
+    // Remove from list, add to removed list, saave removed list
     this.state.donations.splice(index, 1);
+    this.state.removedDonations.push(donation);
+    this.saveRemovedDonations();
+
+    // Sort by time
+    this.state.removedDonations.sort((a, b) => {
+      return a.timestamp.valueOf() - b.timestamp.valueOf();
+    });
+
     this.forceUpdate();
   }
 
@@ -262,6 +299,11 @@ class App extends React.Component {
           <DonationList
             donations={this.state.donations}
             onRemove={d => this.onDonationRemoveClick(d)}
+          />
+
+          <h2>Removed Donations</h2>
+          <DonationList
+            donations={this.state.removedDonations}
           />
         </div>
       </div>
