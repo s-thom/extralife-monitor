@@ -6,7 +6,7 @@ import Donation, { DonationData } from './types/Donation';
 export async function getParticipantInfo(id: number): Promise<Participant> {
   const pInfo: ParticipantData = await r2
     // tslint:disable max-line-length
-    .get(`http://extra-life.org/index.cfm?fuseaction=donorDrive.participant=&participantID=${id}&format=json`)
+    .get(`https://www.extra-life.org/index.cfm?fuseaction=donorDrive.participant=&participantID=${id}&format=json`)
     // tslint:enable max-line-length
     .json;
 
@@ -16,7 +16,7 @@ export async function getParticipantInfo(id: number): Promise<Participant> {
 export async function getRecentDonations(participant: Participant): Promise<Donation[]> {
   const dInfo: DonationData[] = await r2
     // tslint:disable max-line-length
-    .get(`http://extra-life.org/index.cfm?fuseaction=donorDrive.participantDonations&participantID=${participant.id}&format=json`)
+    .get(`https://www.extra-life.org/index.cfm?fuseaction=donorDrive.participantDonations&participantID=${participant.id}&format=json`)
     // tslint:enable max-line-length
     .json;
 
