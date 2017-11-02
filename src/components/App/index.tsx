@@ -11,8 +11,6 @@ import {
   getRecentDonations,
 } from '../../util';
 
-const logo = require('./logo.svg');
-
 interface AppProps {
 
 }
@@ -20,6 +18,8 @@ interface AppProps {
 interface AppState {
   participants: ParticipantType[];
   donations: DonationType[];
+  participantInputValue: string;
+  participantInputEnabled: boolean;
 }
 
 class App extends React.Component {
@@ -33,6 +33,8 @@ class App extends React.Component {
     this.state = {
       participants: [],
       donations: [],
+      participantInputValue: '',
+      participantInputEnabled: true,
     };
   }
 
@@ -52,28 +54,42 @@ class App extends React.Component {
         return;
       }
 
+      // Disable input box while requesting
+      this.setState({
+        ...this.state,
+        participantInputEnabled: false,
+      });
+
       getParticipantInfo(id)
         .then((participant) => {
           // Check to see if participant is already in the list
-          const existing = this.state.participants.find(p => p.id === participant.id);
+          const participants = this.state.participants;
+          const existing = participants.find(p => p.id === participant.id);
 
           if (existing) {
             // Update data
             existing.updateData(participant);
-            // Force a re-render
-            this.forceUpdate();
           } else {
             // Add participant to list
-            this.setState({
-              ...this.state,
-              participants: [
-                ...this.state.participants,
-                participant,
-              ],
-            });
+            participants.push(participant);
           }
+
+          // Update state
+          this.setState({
+            ...this.state,
+            participants,
+            participantInputValue: '',
+            participantInputEnabled: true,
+          });
         });
     }
+  }
+
+  onAddPersonValueChange(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({
+      ...this.state,
+      participantInputValue: event.target.value,
+    });
   }
 
   onGetDonationsClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -123,27 +139,39 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <h1 className="App-title">Extra Life Donation Viewer</h1>
         </header>
         <div className="App-body">
-          <p className="App-intro">
-            To get started, edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <div className="App-add-participant">
-            <input
-              type="text"
-              ref={e => this.addPersonBox = e}
-              onKeyPress={e => this.onAddPersonKeyPress(e)}
-            />
+
+          <div className="App-controls-container">
+            <div className="App-add-participant">
+              <input
+                className="App-add-participant-input"
+                type="text"
+                ref={e => this.addPersonBox = e}
+                placeholder="ID of Participant"
+                value={this.state.participantInputValue}
+                disabled={!this.state.participantInputEnabled}
+                onChange={e => this.onAddPersonValueChange(e)}
+                onKeyPress={e => this.onAddPersonKeyPress(e)}
+              />
+            </div>
+
+            <div className="App-refresh-donations">
+              <button
+                className="App-refresh-donations-button"
+                onClick={e => this.onGetDonationsClick(e)}
+              >Refresh Donations</button>
+            </div>
           </div>
-          <div className="App-refresh-donations">
-            <button onClick={e => this.onGetDonationsClick(e)}>Refresh</button>
-          </div>
+
+          <h2>Participants</h2>
           <ParticipantList
             participants={this.state.participants}
             onRemove={p => this.onParticipantRemoveClick(p)}
           />
+
+          <h2>Donations</h2>
           <DonationList
             donations={this.state.donations}
             onRemove={d => this.onDonationRemoveClick(d)}

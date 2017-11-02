@@ -1,5 +1,5 @@
 .Donation {
-  max-width: 20em;
+  display: inline-block;
   margin: 0.2em;
   padding: 0.5em;
   border-radius: 0.2em;
@@ -10,6 +10,9 @@
 
 .Donation-header {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   padding-bottom: 0.2em;
   margin-bottom: 0.1em;
@@ -17,16 +20,20 @@
 }
 
 .Donation-amount {
-  flex-grow: 1;
   font-size: 1.5em;
 }
 
 .Donation-body {
+  max-width: 20em;
+}
 
+.Donation-info {
+  flex-grow: 1;
+  margin-left: 0.5em;
 }
 
 .Donation-participant {
-  color: #444444;
+  color: #666666;
   font-size: 1em;
   margin: 0.1em;
 }
@@ -35,3 +42,27 @@
   font-size: 1.5em;
   margin: 0.1em;
 }
+
+.Donation-remove {
+  margin-left: 0.5em;
+  padding: 0.5em;
+  border: none;
+  background-color: #eeeeee;
+  box-shadow: 0 rgba(0, 0, 0, 0), 0 rgba(0, 0, 0, 0);
+  cursor: pointer;
+  outline: 0;
+  -webkit-transition: background-color 0.2s ease-in, box-shadow 0.2s ease-in;
+  -moz-transition: background-color 0.2s ease-in, box-shadow 0.2s ease-in;
+  transition: background-color 0.2s ease-in, box-shadow 0.2s ease-in;
+}
+.Donation-remove:hover {
+  background-color: #cccccc;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+.Donation-remove:active {
+  background-color: #bbbbbb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+
+

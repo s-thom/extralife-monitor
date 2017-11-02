@@ -2,16 +2,16 @@ import Participant from './Participant';
 
 export interface DonationData {
   message: string | null;
-  donorName: string;
+  donorName: string| null;
   createdOn: string;
-  donationAmount: number;
+  donationAmount: number | null;
 }
 
 export default class Donation {
   public readonly message: string | null;
-  public readonly amount: number;
+  public readonly amount: number | null;
   public readonly timestamp: Date;
-  public readonly name: string;
+  public readonly name: string | null;
   public readonly id: string;
 
   public readonly participant: Participant;
