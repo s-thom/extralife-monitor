@@ -48,9 +48,6 @@
   padding: 0.2em;
   cursor: pointer;
   outline: 0;
-  -webkit-transition: background-color 0.2s ease-in;
-  -moz-transition: background-color 0.2s ease-in;
-  transition: background-color 0.2s ease-in;
 }
 .App-refresh-donations-button:hover {
   background-color: #333333;
@@ -58,5 +55,9 @@
 .App-refresh-donations-button:active {
   background-color: #222222;
 }
+.App-refresh-donations-button:disabled {
+  background-color: #aaaaaa;
+}
+
 
 

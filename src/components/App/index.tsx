@@ -20,6 +20,7 @@ interface AppState {
   donations: DonationType[];
   participantInputValue: string;
   participantInputEnabled: boolean;
+  refreshButtonEnabled: boolean;
 }
 
 class App extends React.Component {
@@ -35,6 +36,7 @@ class App extends React.Component {
       donations: [],
       participantInputValue: '',
       participantInputEnabled: true,
+      refreshButtonEnabled: true,
     };
 
     this.loadParticipants();
@@ -68,6 +70,12 @@ class App extends React.Component {
   }
 
   refreshInformation() {
+    // Disable refresh button
+    this.setState({
+      ...this.state,
+      refreshButtonEnabled: false,
+    });
+
     const idArr = this.state.participants
       .map(p => p.id);
 
@@ -79,6 +87,13 @@ class App extends React.Component {
       // Get donation info
       .then((participants) => {
         return this.getDonations(participants);
+      })
+      .then(() => {
+        // Re-enable the refresh button
+        this.setState({
+          ...this.state,
+          refreshButtonEnabled: true,
+        });
       });
   }
 
@@ -178,22 +193,7 @@ class App extends React.Component {
   }
 
   onGetDonationsClick(event: React.MouseEvent<HTMLButtonElement>) {
-    const promises = this.state.participants.map(getRecentDonations);
-    Promise.all(promises)
-      .then((dArr) => {
-        const a: DonationType[] = [];
-        return a.concat(...dArr);
-      })
-      .then((donations) => {
-        donations.sort((a, b) => {
-          return a.timestamp.valueOf() - b.timestamp.valueOf();
-        });
-
-        this.setState({
-          ...this.state,
-          donations,
-        });
-      });
+    this.refreshInformation();
   }
 
   onParticipantRemoveClick(participant: ParticipantType) {
@@ -246,8 +246,9 @@ class App extends React.Component {
             <div className="App-refresh-donations">
               <button
                 className="App-refresh-donations-button"
+                disabled={!this.state.refreshButtonEnabled}
                 onClick={e => this.onGetDonationsClick(e)}
-              >Refresh Donations</button>
+              >Refresh Info</button>
             </div>
           </div>
 
