@@ -39,6 +39,11 @@
 }
 
 .Raffle-name {
+  margin: 0.1em;
+  margin-left: 0.5em;
+}
+
+.Raffle-countdown {
   margin-left: 0.5em;
 }
 
@@ -61,6 +66,11 @@
 .Raffle-remove:active {
   background-color: #bbbbbb;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.Raffle-finished {
+  text-align: center;
+  padding-top: 0.5em;
 }
 
 .Raffle-select-winner-button {

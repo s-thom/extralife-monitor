@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import RaffleType from '../../types/Raffle';
 import Donation from '../Donation';
+import Countdown from '../Countdown';
 import './index.css';
 
 interface Props {
@@ -24,9 +25,10 @@ export default function Raffle({
             {info.donationCount} donation{info.donationCount !== 1 ? 's' : ''}
           </h3>
         </div>
-
-        <h2 className="Raffle-name">{info.name}</h2>
-
+        <div className="Raffle-info">
+          <h2 className="Raffle-name">{info.name}</h2>
+          <Countdown className="Raffle-countdown" time={info.endTime} />
+        </div>
         {
           onRemove && (
             <button
@@ -37,7 +39,6 @@ export default function Raffle({
         }
       </header>
       <div className="Raffle-body">
-        {/* TODO: Winner information? End time information? */}
         {
           info.finished && (
             <div className="Raffle-finished">
