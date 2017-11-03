@@ -6,7 +6,7 @@ export default class Raffle {
   public readonly startTime: Date;
 
   private readonly pattern: RegExp;
-  private readonly onFinish: (winner: Donation | null) => void;
+  private readonly onFinish: () => void;
   private readonly donations: Donation[] = [];
   private readonly timeout: number | NodeJS.Timer;
   private winningDonation: Donation| null = null;
@@ -16,7 +16,7 @@ export default class Raffle {
     name: string,
     endTime: Date,
     pattern: string,
-    onFinish: (winner: Donation | null) => void,
+    onFinish: () => void,
   ) {
     this.name = name;
     this.endTime = endTime;
@@ -27,16 +27,8 @@ export default class Raffle {
 
     this.timeout = setTimeout(
       () => {
-        let w = null;
-
-        try {
-          w = this.selectWinner();
-        } catch (err) {
-
-        }
-
         this.hasFinished = true;
-        this.onFinish(w);
+        this.onFinish();
       },
       endTime.valueOf() - Date.now(),
     );

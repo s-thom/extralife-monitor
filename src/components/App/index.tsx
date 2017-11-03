@@ -282,8 +282,7 @@ class App extends React.Component {
       name,
       new Date(Date.now() + (time * 1000 * 60)),
       pattern,
-      (winner) => {
-        console.log(winner);
+      () => {
         this.forceUpdate();
       },
     );
