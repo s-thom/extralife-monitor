@@ -30,6 +30,10 @@ interface AppState {
 class App extends React.Component {
   private addPersonBox: HTMLInputElement | null;
 
+  private addRaffleName: HTMLInputElement | null;
+  private addRafflePattern: HTMLInputElement | null;
+  private addRaffleTime: HTMLInputElement | null;
+
   state: AppState;
 
   constructor(props: AppProps) {
@@ -237,6 +241,35 @@ class App extends React.Component {
     this.refreshInformation();
   }
 
+  onAddRaffleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    if (!(this.addRaffleName && this.addRafflePattern && this.addRaffleTime)) {
+      console.error('Tried to add a raffle, but no reference to <input>s');
+      return;
+    }
+
+    const name = this.addRaffleName.value;
+    const pattern = this.addRafflePattern.value;
+    const time = Number.parseInt(this.addRaffleTime.value);
+
+    if (!(name && pattern && time)) {
+      console.error('Tried to add a raffle, but one of the <input>s has no value');
+      return;
+    }
+
+    const raffle = new RaffleType(
+      name,
+      new Date(Date.now() + (time * 1000 * 60)),
+      pattern,
+      (winner) => {
+        console.log(winner);
+        this.forceUpdate();
+      },
+    );
+
+    this.state.raffles.push(raffle);
+    this.forceUpdate();
+  }
+
   onParticipantRemoveClick(participant: ParticipantType) {
     // Ensure participant is actually in array
     const index = this.state.participants.indexOf(participant);
@@ -335,6 +368,33 @@ class App extends React.Component {
           />
 
           <h2>Raffles</h2>
+          <div className="App-add-raffle">
+            <input
+              ref={e => this.addRaffleTime = e}
+              type="number"
+              name="raffle-time"
+              id="raffle-time"
+              min={1}
+            />
+            <input
+              ref={e => this.addRaffleName = e}
+              type="text"
+              name="raffle-name"
+              id="raffle-name"
+              placeholder="Raffle Name"
+            />
+            <input
+              ref={e => this.addRafflePattern = e}
+              type="text"
+              name="raffle-pattern"
+              id="raffle-pattern"
+              placeholder="Match Pattern"
+            />
+            <button
+              className="App-add-raffle-button"
+              onClick={e => this.onAddRaffleClick(e)}
+            >Add Raffle</button>
+          </div>
           <RaffleList
             raffles={this.state.raffles}
             onRemove={r => this.onRaffleRemoveClick(r)}
