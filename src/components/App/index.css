@@ -27,6 +27,29 @@
   flex-direction: row;
 }
 
+.App-add-participant,
+.App-add-raffle {
+  display: inline-block;
+  margin: 0.2em;
+  padding: 0.5em;
+  border-radius: 0.2em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12),
+  0 1px 2px rgba(0, 0, 0, 0.24);
+  background-color: #ffffff
+}
+
+.App-add-participant-title,
+.App-add-raffle-title {
+  margin: 0;
+}
+
+.App-add-participant-controls,
+.App-add-raffle-controls {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .App-add-participant-input {
   border: none;
   border-bottom: 2px solid #444444;
@@ -45,23 +68,31 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
-.App-refresh-donations-button {
+.App-refresh-button,
+.App-add-participant-button,
+.App-add-raffle-button {
   border: none;
   background-color: #444444;
   border-radius: 0.2em;
   color: #ffffff;
-  font-size: 1.5em;
+  font-size: 1.2em;
   padding: 0.2em;
   cursor: pointer;
   outline: 0;
 }
-.App-refresh-donations-button:hover {
+.App-refresh-button:hover,
+.App-add-participant-button:hover,
+.App-add-raffle-button:hover {
   background-color: #333333;
 }
-.App-refresh-donations-button:active {
+.App-refresh-button:active,
+.App-add-participant-button:active,
+.App-add-raffle-button:active {
   background-color: #222222;
 }
-.App-refresh-donations-button:disabled {
+.App-refresh-button:disabled,
+.App-add-participant-button:disabled,
+.App-add-raffle-button:disabled {
   background-color: #aaaaaa;
 }
 

@@ -181,6 +181,39 @@ class App extends React.Component {
       });
   }
 
+  addParticipant(id: number) {
+    // Disable input box while requesting
+    this.setState({
+      ...this.state,
+      participantInputEnabled: false,
+    });
+
+    getParticipantInfo(id)
+      .then((participant) => {
+        // Check to see if participant is already in the list
+        const participants = this.state.participants;
+        const existing = participants.find(p => p.id === participant.id);
+
+        if (existing) {
+          // Update data
+          existing.updateData(participant);
+        } else {
+          // Add participant to list
+          participants.push(participant);
+        }
+
+        // Update state
+        this.setState({
+          ...this.state,
+          participants,
+          participantInputValue: '',
+          participantInputEnabled: true,
+        });
+
+        this.saveParticipants();
+      });
+  }
+
   onAddPersonKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
     if (!this.addPersonBox) {
       return;
@@ -197,37 +230,26 @@ class App extends React.Component {
         return;
       }
 
-      // Disable input box while requesting
-      this.setState({
-        ...this.state,
-        participantInputEnabled: false,
-      });
-
-      getParticipantInfo(id)
-        .then((participant) => {
-          // Check to see if participant is already in the list
-          const participants = this.state.participants;
-          const existing = participants.find(p => p.id === participant.id);
-
-          if (existing) {
-            // Update data
-            existing.updateData(participant);
-          } else {
-            // Add participant to list
-            participants.push(participant);
-          }
-
-          // Update state
-          this.setState({
-            ...this.state,
-            participants,
-            participantInputValue: '',
-            participantInputEnabled: true,
-          });
-
-          this.saveParticipants();
-        });
+      this.addParticipant(id);
     }
+  }
+
+  onAddPersonButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
+    if (!this.addPersonBox) {
+      return;
+    }
+
+    // Get the number from the box
+    const idString = this.addPersonBox.value;
+    let id;
+    try {
+      id = Number.parseInt(idString);
+    } catch (err) {
+      console.error(err);
+      return;
+    }
+
+    this.addParticipant(id);
   }
 
   onAddPersonValueChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -346,6 +368,11 @@ class App extends React.Component {
                   onChange={e => this.onAddPersonValueChange(e)}
                   onKeyPress={e => this.onAddPersonKeyPress(e)}
                 />
+                <button
+                  className="App-add-participant-button"
+                  disabled={!this.state.participantInputEnabled}
+                  onClick={e => this.onAddPersonButtonClick(e)}
+                >Add</button>
               </div>
             </div>
             <ParticipantList
