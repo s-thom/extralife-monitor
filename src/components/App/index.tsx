@@ -400,6 +400,7 @@ class App extends React.Component {
               <h3 className="App-add-raffle-title">Add Raffle</h3>
               <div className="App-add-raffle-controls">
                 <input
+                  className="App-add-raffle-time"
                   ref={e => this.addRaffleTime = e}
                   type="number"
                   name="raffle-time"
@@ -408,6 +409,7 @@ class App extends React.Component {
                   min={1}
                 />
                 <input
+                  className="App-add-raffle-name"
                   ref={e => this.addRaffleName = e}
                   type="text"
                   name="raffle-name"
@@ -415,6 +417,7 @@ class App extends React.Component {
                   placeholder="Raffle Name"
                 />
                 <input
+                  className="App-add-raffle-pattern"
                   ref={e => this.addRafflePattern = e}
                   type="text"
                   name="raffle-pattern"
