@@ -29,7 +29,7 @@ export default function Donation({
             <button
               className="Donation-remove"
               onClick={() => onRemove(info)}
-            >❌</button>
+            >✅</button>
           )
         }
       </header>
