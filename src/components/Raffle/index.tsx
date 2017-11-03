@@ -44,7 +44,7 @@ export default function Raffle({
               <button
                 className="Raffle-select-winner-button"
                 onClick={() => onSelectDonation(info)}
-              >{info.winner ? 'S' : 'Res'}elect winner</button>
+              >{info.winner ? 'Res' : 'S'}elect winner</button>
               {
                 info.winner ? (
                   <Donation info={info.winner} />

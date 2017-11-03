@@ -291,6 +291,11 @@ class App extends React.Component {
     );
 
     this.state.raffles.push(raffle);
+
+    this.addRaffleName.value = '';
+    this.addRafflePattern.value = '';
+    this.addRaffleTime.value = '';
+
     this.forceUpdate();
   }
 
@@ -424,15 +429,6 @@ class App extends React.Component {
               <h3 className="App-add-raffle-title">Add Raffle</h3>
               <div className="App-add-raffle-controls">
                 <input
-                  className="App-add-raffle-time"
-                  ref={e => this.addRaffleTime = e}
-                  type="number"
-                  name="raffle-time"
-                  id="raffle-time"
-                  placeholder="Length (Minutes)"
-                  min={1}
-                />
-                <input
                   className="App-add-raffle-name"
                   ref={e => this.addRaffleName = e}
                   type="text"
@@ -447,6 +443,15 @@ class App extends React.Component {
                   name="raffle-pattern"
                   id="raffle-pattern"
                   placeholder="Match Pattern"
+                />
+                <input
+                  className="App-add-raffle-time"
+                  ref={e => this.addRaffleTime = e}
+                  type="number"
+                  name="raffle-time"
+                  id="raffle-time"
+                  placeholder="Length (Minutes)"
+                  min={1}
                 />
                 <button
                   className="App-add-raffle-button"
