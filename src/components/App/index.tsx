@@ -331,59 +331,80 @@ class App extends React.Component {
           >Refresh Info</button>
         </header>
         <div className="App-body">
+          <div className="App-participants-container">
+            <h1>Participants</h1>
             <div className="App-add-participant">
+              <h3 className="App-add-participant-title">Add Participant</h3>
+              <div className="App-add-participant-controls">
+                <input
+                  className="App-add-participant-input"
+                  type="text"
+                  ref={e => this.addPersonBox = e}
+                  placeholder="ID"
+                  value={this.state.participantInputValue}
+                  disabled={!this.state.participantInputEnabled}
+                  onChange={e => this.onAddPersonValueChange(e)}
+                  onKeyPress={e => this.onAddPersonKeyPress(e)}
+                />
+              </div>
             </div>
+            <ParticipantList
+              participants={this.state.participants}
+              onRemove={p => this.onParticipantRemoveClick(p)}
+            />
           </div>
 
-          <h2>Participants</h2>
-          <ParticipantList
-            participants={this.state.participants}
-            onRemove={p => this.onParticipantRemoveClick(p)}
-          />
-
-          <h2>Donations</h2>
-          <DonationList
-            donations={this.state.donations}
-            onRemove={d => this.onDonationRemoveClick(d)}
-          />
-
-          <h2>Removed Donations</h2>
-          <DonationList
-            donations={this.state.removedDonations}
-          />
-
-          <h2>Raffles</h2>
-          <div className="App-add-raffle">
-            <input
-              ref={e => this.addRaffleTime = e}
-              type="number"
-              name="raffle-time"
-              id="raffle-time"
-              min={1}
+          <div className="App-donations-container">
+            <h1>Donations</h1>
+            <h2>Unread</h2>
+            <DonationList
+              donations={this.state.donations}
+              onRemove={d => this.onDonationRemoveClick(d)}
             />
-            <input
-              ref={e => this.addRaffleName = e}
-              type="text"
-              name="raffle-name"
-              id="raffle-name"
-              placeholder="Raffle Name"
+            <h2>Read</h2>
+            <DonationList
+              donations={this.state.removedDonations}
             />
-            <input
-              ref={e => this.addRafflePattern = e}
-              type="text"
-              name="raffle-pattern"
-              id="raffle-pattern"
-              placeholder="Match Pattern"
-            />
-            <button
-              className="App-add-raffle-button"
-              onClick={e => this.onAddRaffleClick(e)}
-            >Add Raffle</button>
           </div>
-          <RaffleList
-            raffles={this.state.raffles}
-            onRemove={r => this.onRaffleRemoveClick(r)}
-          />
+
+          <div className="App-raffles-container">
+            <h1>Raffles</h1>
+            <div className="App-add-raffle">
+              <h3 className="App-add-raffle-title">Add Raffle</h3>
+              <div className="App-add-raffle-controls">
+                <input
+                  ref={e => this.addRaffleTime = e}
+                  type="number"
+                  name="raffle-time"
+                  id="raffle-time"
+                  placeholder="Length (Minutes)"
+                  min={1}
+                />
+                <input
+                  ref={e => this.addRaffleName = e}
+                  type="text"
+                  name="raffle-name"
+                  id="raffle-name"
+                  placeholder="Raffle Name"
+                />
+                <input
+                  ref={e => this.addRafflePattern = e}
+                  type="text"
+                  name="raffle-pattern"
+                  id="raffle-pattern"
+                  placeholder="Match Pattern"
+                />
+                <button
+                  className="App-add-raffle-button"
+                  onClick={e => this.onAddRaffleClick(e)}
+                >Add</button>
+              </div>
+            </div>
+            <RaffleList
+              raffles={this.state.raffles}
+              onRemove={r => this.onRaffleRemoveClick(r)}
+            />
+          </div>
         </div>
       </div>
     );
