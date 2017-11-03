@@ -62,3 +62,27 @@
   background-color: #bbbbbb;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
+
+.Raffle-select-winner-button {
+  border: none;
+  background-color: #444444;
+  border-radius: 0.2em;
+  color: #ffffff;
+  font-size: 1.2em;
+  padding: 0.2em;
+  cursor: pointer;
+  outline: 0;
+}
+
+.Raffle-select-winner-button:hover {
+  background-color: #333333;
+}
+
+.Raffle-select-winner-button:active {
+  background-color: #222222;
+}
+
+.Raffle-select-winner-button:disabled {
+  background-color: #aaaaaa;
+}
+

@@ -25,6 +25,7 @@ interface AppState {
   participantInputEnabled: boolean;
   refreshButtonEnabled: boolean;
   raffles: RaffleType[];
+  lastUpdate: number;
 }
 
 class App extends React.Component {
@@ -47,6 +48,7 @@ class App extends React.Component {
       participantInputValue: '',
       participantInputEnabled: true,
       refreshButtonEnabled: true,
+      lastUpdate: 0,
     };
 
     this.loadParticipants();
@@ -110,6 +112,7 @@ class App extends React.Component {
         this.setState({
           ...this.state,
           refreshButtonEnabled: true,
+          lastUpdate: Date.now(),
         });
       });
   }
@@ -340,6 +343,28 @@ class App extends React.Component {
     this.forceUpdate();
   }
 
+  onRaffleSelectDonationClick(raffle: RaffleType) {
+    // Ensure donation is actually in array
+    const index = this.state.raffles.indexOf(raffle);
+    if (index === -1) {
+      // May want to display some sort of error?
+      return;
+    }
+
+    // Ensure the latest donations are in the list
+    let prom;
+    if (this.state.lastUpdate < raffle.endTime.valueOf()) {
+      prom = this.refreshInformation();
+    } else {
+      prom = Promise.resolve();
+    }
+    prom
+      .then(() => {
+        raffle.selectWinner();
+        this.forceUpdate();
+      });
+  }
+
   render() {
     return (
       <div className="App">
@@ -432,6 +457,7 @@ class App extends React.Component {
             <RaffleList
               raffles={this.state.raffles}
               onRemove={r => this.onRaffleRemoveClick(r)}
+              onSelectDonation={r => this.onRaffleSelectDonationClick(r)}
             />
           </div>
         </div>

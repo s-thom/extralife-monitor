@@ -6,11 +6,13 @@ import './index.css';
 
 interface Props {
   info: RaffleType;
+  onSelectDonation: (raffle: RaffleType) => void;
   onRemove?: (raffle: RaffleType) => void;
 }
 
 export default function Raffle({
   info,
+  onSelectDonation,
   onRemove,
 }: Props) {
   return (
@@ -38,11 +40,20 @@ export default function Raffle({
         {/* TODO: Winner information? End time information? */}
         {
           info.finished && (
-            info.winner ? (
-              <Donation info={info.winner} />
-            ) : (
-              <p className="Raffle-no-winner">No winner was found</p>
-            )
+            <div className="Raffle-finished">
+              <button
+                className="Raffle-select-winner-button"
+                onClick={() => onSelectDonation(info)}
+              >{info.winner ? 'S' : 'Res'}elect winner</button>
+              {
+                info.winner ? (
+                  <Donation info={info.winner} />
+                ) : (
+                  <p className="Raffle-no-winner">No winner has been selected yet</p>
+                )
+              }
+            </div>
+
           )
         }
       </div>
