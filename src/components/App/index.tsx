@@ -25,6 +25,7 @@ interface AppState {
   participantInputEnabled: boolean;
   refreshButtonEnabled: boolean;
   raffles: RaffleType[];
+  lastUpdate: number;
 }
 
 class App extends React.Component {
@@ -47,6 +48,7 @@ class App extends React.Component {
       participantInputValue: '',
       participantInputEnabled: true,
       refreshButtonEnabled: true,
+      lastUpdate: 0,
     };
 
     this.loadParticipants();
@@ -110,6 +112,7 @@ class App extends React.Component {
         this.setState({
           ...this.state,
           refreshButtonEnabled: true,
+          lastUpdate: Date.now(),
         });
       });
   }
@@ -282,13 +285,17 @@ class App extends React.Component {
       name,
       new Date(Date.now() + (time * 1000 * 60)),
       pattern,
-      (winner) => {
-        console.log(winner);
+      () => {
         this.forceUpdate();
       },
     );
 
     this.state.raffles.push(raffle);
+
+    this.addRaffleName.value = '';
+    this.addRafflePattern.value = '';
+    this.addRaffleTime.value = '';
+
     this.forceUpdate();
   }
 
@@ -339,6 +346,28 @@ class App extends React.Component {
     // Remove from list
     this.state.raffles.splice(index, 1);
     this.forceUpdate();
+  }
+
+  onRaffleSelectDonationClick(raffle: RaffleType) {
+    // Ensure donation is actually in array
+    const index = this.state.raffles.indexOf(raffle);
+    if (index === -1) {
+      // May want to display some sort of error?
+      return;
+    }
+
+    // Ensure the latest donations are in the list
+    let prom;
+    if (this.state.lastUpdate < raffle.endTime.valueOf()) {
+      prom = this.refreshInformation();
+    } else {
+      prom = Promise.resolve();
+    }
+    prom
+      .then(() => {
+        raffle.selectWinner();
+        this.forceUpdate();
+      });
   }
 
   render() {
@@ -400,15 +429,6 @@ class App extends React.Component {
               <h3 className="App-add-raffle-title">Add Raffle</h3>
               <div className="App-add-raffle-controls">
                 <input
-                  className="App-add-raffle-time"
-                  ref={e => this.addRaffleTime = e}
-                  type="number"
-                  name="raffle-time"
-                  id="raffle-time"
-                  placeholder="Length (Minutes)"
-                  min={1}
-                />
-                <input
                   className="App-add-raffle-name"
                   ref={e => this.addRaffleName = e}
                   type="text"
@@ -424,6 +444,15 @@ class App extends React.Component {
                   id="raffle-pattern"
                   placeholder="Match Pattern"
                 />
+                <input
+                  className="App-add-raffle-time"
+                  ref={e => this.addRaffleTime = e}
+                  type="number"
+                  name="raffle-time"
+                  id="raffle-time"
+                  placeholder="Length (Minutes)"
+                  min={1}
+                />
                 <button
                   className="App-add-raffle-button"
                   onClick={e => this.onAddRaffleClick(e)}
@@ -433,6 +462,7 @@ class App extends React.Component {
             <RaffleList
               raffles={this.state.raffles}
               onRemove={r => this.onRaffleRemoveClick(r)}
+              onSelectDonation={r => this.onRaffleSelectDonationClick(r)}
             />
           </div>
         </div>
