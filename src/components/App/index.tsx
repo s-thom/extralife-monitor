@@ -3,8 +3,10 @@ import './index.css';
 
 import ParticipantType from '../../types/Participant';
 import DonationType from '../../types/Donation';
+import RaffleType from '../../types/Raffle';
 import ParticipantList from '../ParticipantList';
 import DonationList from '../DonationList';
+import RaffleList from '../RaffleList';
 
 import {
   getParticipantInfo,
@@ -22,10 +24,15 @@ interface AppState {
   participantInputValue: string;
   participantInputEnabled: boolean;
   refreshButtonEnabled: boolean;
+  raffles: RaffleType[];
 }
 
 class App extends React.Component {
   private addPersonBox: HTMLInputElement | null;
+
+  private addRaffleName: HTMLInputElement | null;
+  private addRafflePattern: HTMLInputElement | null;
+  private addRaffleTime: HTMLInputElement | null;
 
   state: AppState;
 
@@ -36,6 +43,7 @@ class App extends React.Component {
       participants: [],
       donations: [],
       removedDonations: [],
+      raffles: [],
       participantInputValue: '',
       participantInputEnabled: true,
       refreshButtonEnabled: true,
@@ -151,6 +159,15 @@ class App extends React.Component {
           }
         });
 
+        // Add donations to any active raffles
+        if (this.state.raffles.length) {
+          donations.forEach((donation) => {
+            this.state.raffles.forEach((raffle) => {
+              raffle.add(donation);
+            });
+          });
+        }
+
         // Save in state
         this.setState({
           ...this.state,
@@ -224,6 +241,35 @@ class App extends React.Component {
     this.refreshInformation();
   }
 
+  onAddRaffleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    if (!(this.addRaffleName && this.addRafflePattern && this.addRaffleTime)) {
+      console.error('Tried to add a raffle, but no reference to <input>s');
+      return;
+    }
+
+    const name = this.addRaffleName.value;
+    const pattern = this.addRafflePattern.value;
+    const time = Number.parseInt(this.addRaffleTime.value);
+
+    if (!(name && pattern && time)) {
+      console.error('Tried to add a raffle, but one of the <input>s has no value');
+      return;
+    }
+
+    const raffle = new RaffleType(
+      name,
+      new Date(Date.now() + (time * 1000 * 60)),
+      pattern,
+      (winner) => {
+        console.log(winner);
+        this.forceUpdate();
+      },
+    );
+
+    this.state.raffles.push(raffle);
+    this.forceUpdate();
+  }
+
   onParticipantRemoveClick(participant: ParticipantType) {
     // Ensure participant is actually in array
     const index = this.state.participants.indexOf(participant);
@@ -255,6 +301,21 @@ class App extends React.Component {
       return a.timestamp.valueOf() - b.timestamp.valueOf();
     });
 
+    this.forceUpdate();
+  }
+
+  onRaffleRemoveClick(raffle: RaffleType) {
+    // Ensure donation is actually in array
+    const index = this.state.raffles.indexOf(raffle);
+    if (index === -1) {
+      // May want to display some sort of error?
+      return;
+    }
+
+    raffle.cancel();
+
+    // Remove from list
+    this.state.raffles.splice(index, 1);
     this.forceUpdate();
   }
 
@@ -304,6 +365,39 @@ class App extends React.Component {
           <h2>Removed Donations</h2>
           <DonationList
             donations={this.state.removedDonations}
+          />
+
+          <h2>Raffles</h2>
+          <div className="App-add-raffle">
+            <input
+              ref={e => this.addRaffleTime = e}
+              type="number"
+              name="raffle-time"
+              id="raffle-time"
+              min={1}
+            />
+            <input
+              ref={e => this.addRaffleName = e}
+              type="text"
+              name="raffle-name"
+              id="raffle-name"
+              placeholder="Raffle Name"
+            />
+            <input
+              ref={e => this.addRafflePattern = e}
+              type="text"
+              name="raffle-pattern"
+              id="raffle-pattern"
+              placeholder="Match Pattern"
+            />
+            <button
+              className="App-add-raffle-button"
+              onClick={e => this.onAddRaffleClick(e)}
+            >Add Raffle</button>
+          </div>
+          <RaffleList
+            raffles={this.state.raffles}
+            onRemove={r => this.onRaffleRemoveClick(r)}
           />
         </div>
       </div>
