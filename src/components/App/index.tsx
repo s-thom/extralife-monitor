@@ -324,29 +324,14 @@ class App extends React.Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Extra Life Donation Viewer</h1>
+          <button
+            className="App-refresh-button"
+            disabled={!this.state.refreshButtonEnabled}
+            onClick={e => this.onGetDonationsClick(e)}
+          >Refresh Info</button>
         </header>
         <div className="App-body">
-
-          <div className="App-controls-container">
             <div className="App-add-participant">
-              <input
-                className="App-add-participant-input"
-                type="text"
-                ref={e => this.addPersonBox = e}
-                placeholder="ID of Participant"
-                value={this.state.participantInputValue}
-                disabled={!this.state.participantInputEnabled}
-                onChange={e => this.onAddPersonValueChange(e)}
-                onKeyPress={e => this.onAddPersonKeyPress(e)}
-              />
-            </div>
-
-            <div className="App-refresh-donations">
-              <button
-                className="App-refresh-donations-button"
-                disabled={!this.state.refreshButtonEnabled}
-                onClick={e => this.onGetDonationsClick(e)}
-              >Refresh Info</button>
             </div>
           </div>
 

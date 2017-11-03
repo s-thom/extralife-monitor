@@ -4,10 +4,16 @@
 }
 
 .App-header {
+  display: flex;
+  flex-direction: row;
   background-color: #222;
   margin: 0;
   padding: .5em 2em;
   color: white;
+}
+
+.App-title {
+  flex-grow: 1;
 }
 
 .App-body {
