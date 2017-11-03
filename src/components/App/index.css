@@ -17,7 +17,7 @@
 }
 
 .App-body {
-  max-width: 70em;
+  max-width: 80em;
   margin: 1em auto 0;
   padding: 0 0.5em;
 }
@@ -96,5 +96,29 @@
   background-color: #aaaaaa;
 }
 
+@media (min-width:1025px) {
+  .App-body {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1em;
+    grid-auto-rows: minmax(2em, auto);
+    grid-auto-columns: minmax(15em, auto);
+  }
+
+  .App-participants-container {
+    grid-column: 1;
+    grid-row: 1;
+
+  }
+  .App-donations-container {
+    grid-column: 2;
+    grid-row: 1 / 4;
+  }
+
+  .App-raffles-container {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
 
 
