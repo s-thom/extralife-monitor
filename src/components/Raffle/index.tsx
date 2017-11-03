@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import RaffleType from '../../types/Raffle';
+import Donation from '../Donation';
 import './index.css';
 
 interface Props {
@@ -35,6 +36,15 @@ export default function Raffle({
       </header>
       <div className="Raffle-body">
         {/* TODO: Winner information? End time information? */}
+        {
+          info.finished && (
+            info.winner ? (
+              <Donation info={info.winner} />
+            ) : (
+              <p className="Raffle-no-winner">No winner was found</p>
+            )
+          )
+        }
       </div>
     </div>
   );

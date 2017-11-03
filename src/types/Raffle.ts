@@ -6,20 +6,37 @@ export default class Raffle {
   public readonly startTime: Date;
 
   private readonly pattern: RegExp;
-  private readonly onFinish: () => void;
+  private readonly onFinish: (winner: Donation | null) => void;
   private readonly donations: Donation[] = [];
   private readonly timeout: number | NodeJS.Timer;
+  private winningDonation: Donation| null = null;
+  private hasFinished: boolean;
 
-  constructor(name: string, endTime: Date, pattern: string, onFinish: () => void) {
+  constructor(
+    name: string,
+    endTime: Date,
+    pattern: string,
+    onFinish: (winner: Donation | null) => void,
+  ) {
     this.name = name;
     this.endTime = endTime;
     this.startTime = new Date();
     this.pattern = new RegExp(pattern, 'i');
     this.onFinish = onFinish;
+    this.hasFinished = false;
 
     this.timeout = setTimeout(
       () => {
-        this.onFinish();
+        let w = null;
+
+        try {
+          w = this.selectWinner();
+        } catch (err) {
+
+        }
+
+        this.hasFinished = true;
+        this.onFinish(w);
       },
       endTime.valueOf() - Date.now(),
     );
@@ -31,6 +48,14 @@ export default class Raffle {
 
   get donationTotal() {
     return this.donations.reduce((p, c) => p + (c.amount || 0), 0);
+  }
+
+  get winner() {
+    return this.winningDonation;
+  }
+
+  get finished() {
+    return this.hasFinished;
   }
 
   add(donation: Donation) {
@@ -57,7 +82,8 @@ export default class Raffle {
 
   selectWinner() {
     if (this.donationCount === 0) {
-      throw new Error('No donations in raffle');
+      console.error('No donations in raffle');
+      return null;
     }
 
     // Select a random starting point
@@ -67,13 +93,15 @@ export default class Raffle {
 
       curr = curr - (donation.amount || 0);
       if (curr <= 0) {
-        return donation;
+        this.winningDonation = donation;
+        return this.winningDonation;
       }
     }
 
     // This should never happen, but in case it does, just return the first donation.
-    console.error('Raffle winner selection failed');
-    return this.donations[0];
+    console.error('Raffle winner selection failed, taking first');
+    this.winningDonation = this.donations[0];
+    return this.winningDonation;
   }
 
   cancel() {
