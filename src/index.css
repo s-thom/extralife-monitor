@@ -3,3 +3,58 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.big-button {
+  border: none;
+  background-color: #444444;
+  border-radius: 0.2em;
+  color: #ffffff;
+  font-size: 1.2em;
+  padding: 0.2em;
+  cursor: pointer;
+  outline: 0;
+}
+
+.big-button:hover {
+  background-color: #333333;
+}
+
+.big-button:active {
+  background-color: #222222;
+}
+
+.big-button:disabled {
+  background-color: #aaaaaa;
+}
+
+.card {
+  display: inline-block;
+  margin: 0.2em;
+  padding: 0.5em;
+  border-radius: 0.2em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12),
+  0 1px 2px rgba(0, 0, 0, 0.24);
+  background-color: #ffffff;
+}
+
+.text-input {
+  border: none;
+  border-bottom: 2px solid #444444;
+  border-radius: 0.1em;
+  background-color: #ffffff;
+  font-size: 1.2em;
+  padding: 0.2em;
+  margin-right: 0.5em;
+  outline: 0;
+  box-shadow: 0 rgba(0, 0, 0, 0), 0 rgba(0, 0, 0, 0);
+  -webkit-transition: border-bottom 0.2s ease-in, box-shadow 0.2s ease-in;
+  -moz-transition: border-bottom 0.2s ease-in, box-shadow 0.2s ease-in;
+  transition: border-bottom 0.2s ease-in, box-shadow 0.2s ease-in;
+}
+
+.text-input:focus {
+  border-bottom: 2px solid #222222;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+

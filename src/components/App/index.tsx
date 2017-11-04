@@ -419,16 +419,16 @@ class App extends React.Component {
         <header className="App-header">
           <h1 className="App-title">Extra Life Donation Viewer</h1>
           <button
-            className="App-refresh-button"
+            className="App-refresh-button big-button"
             disabled={!this.state.refreshButtonEnabled}
             onClick={e => this.onGetDonationsClick(e)}
           >Refresh Info</button>
         </header>
         <div className="App-body">
           <div className="App-status-container">
-            <div className="App-status-autorefresh">
+            <div className="App-status-autorefresh card">
               <button
-                className="App-autorefresh-button"
+                className="App-autorefresh-button big-button"
                 onClick={e => this.onRefreshToggleClick(e)}
               >{this.state.autoRefresh ? 'Dis' : 'En'}able Autorefresh</button>
               <p>
@@ -446,11 +446,11 @@ class App extends React.Component {
           </div>
           <div className="App-participants-container">
             <h1>Participants</h1>
-            <div className="App-add-participant">
+            <div className="App-add-participant card">
               <h3 className="App-add-participant-title">Add Participant</h3>
               <div className="App-add-participant-controls">
                 <input
-                  className="App-add-participant-input"
+                  className="App-add-participant-input text-input"
                   type="text"
                   ref={e => this.addPersonBox = e}
                   placeholder="ID"
@@ -460,7 +460,7 @@ class App extends React.Component {
                   onKeyPress={e => this.onAddPersonKeyPress(e)}
                 />
                 <button
-                  className="App-add-participant-button"
+                  className="App-add-participant-button big-button"
                   disabled={!this.state.participantInputEnabled}
                   onClick={e => this.onAddPersonButtonClick(e)}
                 >Add</button>
@@ -487,11 +487,11 @@ class App extends React.Component {
 
           <div className="App-raffles-container">
             <h1>Raffles</h1>
-            <div className="App-add-raffle">
+            <div className="App-add-raffle card">
               <h3 className="App-add-raffle-title">Add Raffle</h3>
               <div className="App-add-raffle-controls">
                 <input
-                  className="App-add-raffle-name"
+                  className="App-add-raffle-name text-input"
                   ref={e => this.addRaffleName = e}
                   type="text"
                   name="raffle-name"
@@ -499,7 +499,7 @@ class App extends React.Component {
                   placeholder="Raffle Name"
                 />
                 <input
-                  className="App-add-raffle-pattern"
+                  className="App-add-raffle-pattern text-input"
                   ref={e => this.addRafflePattern = e}
                   type="text"
                   name="raffle-pattern"
@@ -507,7 +507,7 @@ class App extends React.Component {
                   placeholder="Match Pattern"
                 />
                 <input
-                  className="App-add-raffle-time"
+                  className="App-add-raffle-time text-input"
                   ref={e => this.addRaffleTime = e}
                   type="number"
                   name="raffle-time"
@@ -516,7 +516,7 @@ class App extends React.Component {
                   min={1}
                 />
                 <input
-                  className="App-add-raffle-ticket-size"
+                  className="App-add-raffle-ticket-size text-input"
                   ref={e => this.addRaffleTicketSize = e}
                   type="number"
                   name="raffle-time"
@@ -526,7 +526,7 @@ class App extends React.Component {
                   step={0.01}
                 />
                 <button
-                  className="App-add-raffle-button"
+                  className="App-add-raffle-button big-button"
                   onClick={e => this.onAddRaffleClick(e)}
                 >Add</button>
               </div>
