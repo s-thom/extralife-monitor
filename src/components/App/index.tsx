@@ -28,6 +28,7 @@ interface AppState {
   raffles: RaffleType[];
   lastUpdate: number;
   nextUpdate: number;
+  autoRefresh: boolean;
 }
 
 const REFRESH_TIMER = 1000 * 60 * 2; // 2 minutes
@@ -55,6 +56,7 @@ class App extends React.Component {
       refreshButtonEnabled: true,
       lastUpdate: 0,
       nextUpdate: 0,
+      autoRefresh: this.loadAutoRefresh(),
     };
 
     this.loadParticipants();
@@ -85,6 +87,16 @@ class App extends React.Component {
       .then((participants) => {
         return this.getDonations(participants);
       });
+  }
+
+  saveAutoRefresh(value?: boolean) {
+    const toSave = (value !== undefined) ? value : this.state.autoRefresh;
+
+    localStorage.setItem('autorefresh', toSave.toString());
+  }
+
+  loadAutoRefresh() {
+    return (localStorage.getItem('autorefresh') || 'true') === 'true';
   }
 
   saveRemovedDonations() {
@@ -390,6 +402,17 @@ class App extends React.Component {
     this.refreshInformation();
   }
 
+  onRefreshToggleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    this.saveAutoRefresh(!this.state.autoRefresh);
+
+    console.log(this.state.autoRefresh);
+
+    this.setState({
+      ...this.state,
+      autoRefresh: !this.state.autoRefresh,
+    });
+  }
+
   render() {
     return (
       <div className="App">
@@ -403,11 +426,19 @@ class App extends React.Component {
         </header>
         <div className="App-body">
           <div className="App-status-container">
-            <Countdown
-              className="App-refresh-countdown"
-              time={new Date(this.state.nextUpdate)}
-              onFinish={() => this.onRefreshCountdownFinish()}
-            />
+            <div className="App-status-autorefresh">
+              <button
+                className="App-autorefresh-button"
+                onClick={e => this.onRefreshToggleClick(e)}
+              >{this.state.autoRefresh ? 'Dis' : 'En'}able Autorefresh</button>
+              {this.state.autoRefresh && (
+                <Countdown
+                  className="App-autorefresh-countdown"
+                  time={new Date(this.state.nextUpdate)}
+                  onFinish={() => this.onRefreshCountdownFinish()}
+                />
+              )}
+            </div>
           </div>
           <div className="App-participants-container">
             <h1>Participants</h1>
