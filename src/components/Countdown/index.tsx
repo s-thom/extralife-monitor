@@ -6,6 +6,7 @@ interface Props {
   time: Date;
   interval?: number;
   className?: string;
+  onFinish?: () => void;
 }
 
 interface State {
@@ -27,16 +28,28 @@ export default class Countdown extends React.Component {
     };
 
     this.tickFunction = (() => {
+      const remaining = this.props.time.valueOf() - Date.now();
+
       this.setState({
-        remaining: this.props.time.valueOf() - Date.now(),
+        remaining,
       });
+
+      // Stop timer if finished
+      if (remaining <= 0) {
+        this.clearInterval();
+
+        // Call finish function
+        if (this.props.onFinish) {
+          this.props.onFinish();
+        }
+      }
     }).bind(this);
 
     this.setInterval();
   }
 
   setInterval() {
-    this.interval = setInterval(this.tickFunction, 1000);
+    this.interval = setInterval(this.tickFunction, this.interval || 1000);
   }
 
   clearInterval() {
