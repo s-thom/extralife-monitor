@@ -18,6 +18,7 @@ export default class Raffle {
     endTime: Date,
     pattern: string,
     onFinish: () => void,
+    ticketSize = 5,
   ) {
     this.name = name;
     this.endTime = endTime;
@@ -25,7 +26,7 @@ export default class Raffle {
     this.pattern = new RegExp(pattern, 'i');
     this.onFinish = onFinish;
     this.hasFinished = false;
-    this.ticketSize = 5;
+    this.ticketSize = ticketSize;
 
     this.timeout = setTimeout(
       () => {
