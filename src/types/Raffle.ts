@@ -4,6 +4,7 @@ export default class Raffle {
   public readonly name: string;
   public readonly endTime: Date;
   public readonly startTime: Date;
+  public readonly ticketSize: number;
 
   private readonly pattern: RegExp;
   private readonly onFinish: () => void;
@@ -11,7 +12,6 @@ export default class Raffle {
   private readonly timeout: number | NodeJS.Timer;
   private winningDonation: Donation| null = null;
   private hasFinished: boolean;
-  private readonly ticketSize: number;
 
   constructor(
     name: string,
