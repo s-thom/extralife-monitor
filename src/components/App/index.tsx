@@ -464,7 +464,7 @@ class App extends React.Component {
                   min={1}
                 />
                 <input
-                  className="App-add-raffle-time"
+                  className="App-add-raffle-ticket-size"
                   ref={e => this.addRaffleTicketSize = e}
                   type="number"
                   name="raffle-time"
