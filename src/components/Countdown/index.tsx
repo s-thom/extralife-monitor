@@ -15,7 +15,9 @@ interface State {
 export default class Countdown extends React.Component {
   state: State;
   props: Props;
-  interval: number | NodeJS.Timer;
+
+  private interval: number | NodeJS.Timer;
+  private tickFunction: () => void;
 
   constructor(props: Props) {
     super(props);
@@ -24,20 +26,39 @@ export default class Countdown extends React.Component {
       remaining: props.time.valueOf() - Date.now(),
     };
 
-    this.interval = setInterval(
-      () => {
-        this.setState({
-          remaining: props.time.valueOf() - Date.now(),
-        });
-      },
-      1000,
-    );
+    this.tickFunction = (() => {
+      this.setState({
+        remaining: this.props.time.valueOf() - Date.now(),
+      });
+    }).bind(this);
+
+    this.setInterval();
   }
 
-  componentWillUnmount() {
+  setInterval() {
+    this.interval = setInterval(this.tickFunction, 1000);
+  }
+
+  clearInterval() {
     // Since tsc is being run in a Node context, cast to a Node timer
     // Will still work for browser
     clearInterval(this.interval as NodeJS.Timer);
+  }
+
+  componentWillUpdate() {
+    this.clearInterval();
+  }
+
+  componentDidUpdate() {
+    this.state = {
+      remaining: this.props.time.valueOf() - Date.now(),
+    };
+
+    this.setInterval();
+  }
+
+  componentWillUnmount() {
+    this.clearInterval();
   }
 
   render() {
