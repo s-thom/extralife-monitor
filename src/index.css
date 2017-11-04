@@ -6,7 +6,7 @@ body {
 
 .big-button {
   border: none;
-  background-color: #444444;
+  background-color: rgb(56, 97, 145);
   border-radius: 0.2em;
   color: #ffffff;
   font-size: 1.2em;
@@ -16,15 +16,18 @@ body {
 }
 
 .big-button:hover {
-  background-color: #333333;
+  background-color: rgb(39, 82, 131);
+
 }
 
 .big-button:active {
-  background-color: #222222;
+  background-color: rgb(29, 69, 116);
+
 }
 
 .big-button:disabled {
-  background-color: #aaaaaa;
+  background-color: rgb(100, 128, 160);
+
 }
 
 .card {

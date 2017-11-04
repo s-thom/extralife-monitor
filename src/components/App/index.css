@@ -6,7 +6,8 @@
 .App-header {
   display: flex;
   flex-direction: row;
-  background-color: #222;
+  background-color: rgb(29, 69, 116);
+
   margin: 0;
   padding: .5em 2em;
   color: white;
