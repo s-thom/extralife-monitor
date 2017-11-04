@@ -7,6 +7,7 @@ import RaffleType from '../../types/Raffle';
 import ParticipantList from '../ParticipantList';
 import DonationList from '../DonationList';
 import RaffleList from '../RaffleList';
+import Countdown from '../Countdown';
 
 import {
   getParticipantInfo,
@@ -26,7 +27,10 @@ interface AppState {
   refreshButtonEnabled: boolean;
   raffles: RaffleType[];
   lastUpdate: number;
+  nextUpdate: number;
 }
+
+const REFRESH_TIMER = 1000 * 60 * 2; // 2 minutes
 
 class App extends React.Component {
   private addPersonBox: HTMLInputElement | null;
@@ -50,6 +54,7 @@ class App extends React.Component {
       participantInputEnabled: true,
       refreshButtonEnabled: true,
       lastUpdate: 0,
+      nextUpdate: 0,
     };
 
     this.loadParticipants();
@@ -114,6 +119,7 @@ class App extends React.Component {
           ...this.state,
           refreshButtonEnabled: true,
           lastUpdate: Date.now(),
+          nextUpdate: Date.now() + REFRESH_TIMER,
         });
       });
   }
@@ -380,6 +386,10 @@ class App extends React.Component {
       });
   }
 
+  onRefreshCountdownFinish() {
+    this.refreshInformation();
+  }
+
   render() {
     return (
       <div className="App">
@@ -392,6 +402,13 @@ class App extends React.Component {
           >Refresh Info</button>
         </header>
         <div className="App-body">
+          <div className="App-status-container">
+            <Countdown
+              className="App-refresh-countdown"
+              time={new Date(this.state.nextUpdate)}
+              onFinish={() => this.onRefreshCountdownFinish()}
+            />
+          </div>
           <div className="App-participants-container">
             <h1>Participants</h1>
             <div className="App-add-participant">
