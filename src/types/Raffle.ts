@@ -11,6 +11,7 @@ export default class Raffle {
   private readonly timeout: number | NodeJS.Timer;
   private winningDonation: Donation| null = null;
   private hasFinished: boolean;
+  private readonly ticketSize: number;
 
   constructor(
     name: string,
@@ -24,6 +25,7 @@ export default class Raffle {
     this.pattern = new RegExp(pattern, 'i');
     this.onFinish = onFinish;
     this.hasFinished = false;
+    this.ticketSize = 5;
 
     this.timeout = setTimeout(
       () => {
@@ -78,22 +80,26 @@ export default class Raffle {
       return null;
     }
 
-    // Select a random starting point
-    let curr = this.donationTotal * Math.random();
+    const totalTickets = this.donations
+      .reduce((p, c) => p + ((c.amount || 0) % this.ticketSize), 0);
+
+    // Select starting point
+    let curr = totalTickets * Math.random();
     for (let i = 0; i < this.donations.length; i += 1) {
       const donation = this.donations[i];
 
-      curr = curr - (donation.amount || 0);
+      // Decrement the current value until 0 or negative
+      // Has same effect as counting up to `curr`
+      curr = curr - ((donation.amount || 0) % this.ticketSize);
       if (curr <= 0) {
         this.winningDonation = donation;
         return this.winningDonation;
       }
     }
 
-    // This should never happen, but in case it does, just return the first donation.
+    // This should never happen
     console.error('Raffle winner selection failed, taking first');
-    this.winningDonation = this.donations[0];
-    return this.winningDonation;
+    return null;
   }
 
   cancel() {
