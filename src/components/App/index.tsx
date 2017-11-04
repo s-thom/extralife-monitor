@@ -34,6 +34,7 @@ class App extends React.Component {
   private addRaffleName: HTMLInputElement | null;
   private addRafflePattern: HTMLInputElement | null;
   private addRaffleTime: HTMLInputElement | null;
+  private addRaffleTicketSize: HTMLInputElement | null;
 
   state: AppState;
 
@@ -267,7 +268,13 @@ class App extends React.Component {
   }
 
   onAddRaffleClick(event: React.MouseEvent<HTMLButtonElement>) {
-    if (!(this.addRaffleName && this.addRafflePattern && this.addRaffleTime)) {
+    // Ensure input elements are non-null
+    if (!(
+      this.addRaffleName &&
+      this.addRafflePattern &&
+      this.addRaffleTime &&
+      this.addRaffleTicketSize
+    )) {
       console.error('Tried to add a raffle, but no reference to <input>s');
       return;
     }
@@ -275,6 +282,7 @@ class App extends React.Component {
     const name = this.addRaffleName.value;
     const pattern = this.addRafflePattern.value;
     const time = Number.parseInt(this.addRaffleTime.value);
+    const ticketSize = Number.parseInt(this.addRaffleTicketSize.value);
 
     if (!(name && pattern && time)) {
       console.error('Tried to add a raffle, but one of the <input>s has no value');
@@ -288,6 +296,7 @@ class App extends React.Component {
       () => {
         this.forceUpdate();
       },
+      ticketSize,
     );
 
     this.state.raffles.push(raffle);
@@ -295,6 +304,7 @@ class App extends React.Component {
     this.addRaffleName.value = '';
     this.addRafflePattern.value = '';
     this.addRaffleTime.value = '';
+    this.addRaffleTicketSize.value = '';
 
     this.forceUpdate();
   }
@@ -452,6 +462,16 @@ class App extends React.Component {
                   id="raffle-time"
                   placeholder="Length (Minutes)"
                   min={1}
+                />
+                <input
+                  className="App-add-raffle-ticket-size"
+                  ref={e => this.addRaffleTicketSize = e}
+                  type="number"
+                  name="raffle-time"
+                  id="raffle-time"
+                  placeholder="Ticket Size ($)"
+                  min={0.01}
+                  step={0.01}
                 />
                 <button
                   className="App-add-raffle-button"

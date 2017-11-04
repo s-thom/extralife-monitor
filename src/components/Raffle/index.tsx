@@ -39,6 +39,9 @@ export default function Raffle({
         }
       </header>
       <div className="Raffle-body">
+        <p className="Raffle-ticket-size">
+          Ticket size: <em><span>${info.ticketSize.toFixed(2)}</span></em>
+        </p>
         {
           info.finished && (
             <div className="Raffle-finished">
