@@ -431,13 +431,17 @@ class App extends React.Component {
                 className="App-autorefresh-button"
                 onClick={e => this.onRefreshToggleClick(e)}
               >{this.state.autoRefresh ? 'Dis' : 'En'}able Autorefresh</button>
-              {this.state.autoRefresh && (
-                <Countdown
-                  className="App-autorefresh-countdown"
-                  time={new Date(this.state.nextUpdate)}
-                  onFinish={() => this.onRefreshCountdownFinish()}
-                />
-              )}
+              <p>
+                Time to next refresh: {this.state.autoRefresh ? (
+                  <Countdown
+                    className="App-autorefresh-countdown"
+                    time={new Date(this.state.nextUpdate)}
+                    onFinish={() => this.onRefreshCountdownFinish()}
+                  />
+                ) : (
+                  <em>Disabled</em>
+                )}
+              </p>
             </div>
           </div>
           <div className="App-participants-container">
