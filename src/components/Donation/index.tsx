@@ -13,7 +13,7 @@ export default function Donation({
   onRemove,
 }: Props) {
   return (
-    <div className="Donation">
+    <div className="Donation card">
       <header className="Donation-header">
         <span className="Donation-amount">
           {info.amount ? `$${info.amount.toFixed(2)}` : <em>$??</em>}

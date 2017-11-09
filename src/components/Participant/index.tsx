@@ -13,7 +13,7 @@ export default function Participant({
   onRemove,
 }: Props) {
   return (
-    <div className="Participant">
+    <div className="Participant card">
       <header className="Participant-header">
         <div className="Participant-picture">
           <img src={info.avatar} alt={info.name} className="Participant-picture-img"/>
