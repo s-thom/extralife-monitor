@@ -63,7 +63,7 @@ export default class Raffle {
       return;
     }
 
-    if (!(donation.message && donation.message.match(this.pattern))) {
+    if (donation.message && !(donation.message.match(this.pattern))) {
       return;
     }
 
@@ -82,7 +82,7 @@ export default class Raffle {
     }
 
     const totalTickets = this.donations
-      .reduce((p, c) => p + ((c.amount || 0) % this.ticketSize), 0);
+      .reduce((p, c) => p + Math.floor((c.amount || 0) / this.ticketSize), 0);
 
     // Select starting point
     let curr = totalTickets * Math.random();
@@ -91,7 +91,7 @@ export default class Raffle {
 
       // Decrement the current value until 0 or negative
       // Has same effect as counting up to `curr`
-      curr = curr - ((donation.amount || 0) % this.ticketSize);
+      curr = curr - Math.floor((donation.amount || 0) / this.ticketSize);
       if (curr <= 0) {
         this.winningDonation = donation;
         return this.winningDonation;

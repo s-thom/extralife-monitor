@@ -54,8 +54,8 @@ class App extends React.Component {
       participantInputValue: '',
       participantInputEnabled: true,
       refreshButtonEnabled: true,
-      lastUpdate: 0,
-      nextUpdate: 0,
+      lastUpdate: Date.now(),
+      nextUpdate: Date.now() + REFRESH_TIMER,
       autoRefresh: this.loadAutoRefresh(),
     };
 
